@@ -600,10 +600,26 @@ async function load() {
       lang = /^th/i.test(l || navigator.language) ? 'th' : 'en';
     }
     setLang(lang);
-    if (!liff.isLoggedIn()) { liff.login(); return; }
+    if (!liff.isLoggedIn()) { liff.login({ redirectUri: location.href }); return; }
+
+    // LINE เก็บ ID token ไว้ในเครื่อง และอาจให้ token ที่หมดอายุแล้ว → ขอ token ใหม่อัตโนมัติ (ครั้งเดียว กันวนลูป)
+    const refreshToken = () => {
+      let tried = '';
+      try { tried = sessionStorage.getItem('ta_relogin') || ''; } catch (e) {}
+      if (tried) return false;
+      try { sessionStorage.setItem('ta_relogin', '1'); } catch (e) {}
+      liff.logout();
+      if (liff.isInClient()) location.reload(); else liff.login({ redirectUri: location.href });
+      return true;
+    };
+    const decoded = liff.getDecodedIDToken && liff.getDecodedIDToken();
+    if (decoded && decoded.exp && decoded.exp * 1000 < Date.now() + 60000 && refreshToken()) return;
+
     idToken = liff.getIDToken();
     try { lineName = (await liff.getProfile()).displayName; } catch (e) {}
     await load();
+    if (view === 'error' && errCode === 'INVALID_TOKEN' && refreshToken()) return;
+    try { if (view !== 'error') sessionStorage.removeItem('ta_relogin'); } catch (e) {}
   } catch (e) {
     if (!T[lang]) setLang('th');
     view = 'error'; errCode = e.message; render();
