@@ -143,6 +143,27 @@
 
   /* ---------- Address ---------- */
   .addr{white-space:pre-line;margin:12px 0 0;padding-left:46px;color:#3d3a34}
+  .g2{display:grid;grid-template-columns:1fr 1fr;gap:0 10px}
+  select{width:100%;padding:13px 14px;border:1.5px solid var(--line);border-radius:12px;font:inherit;background:#fcfbf8;color:var(--ink);outline:none;-webkit-appearance:none;appearance:none;background-image:linear-gradient(45deg,transparent 50%,#8a6d1f 50%),linear-gradient(135deg,#8a6d1f 50%,transparent 50%);background-position:calc(100% - 20px) 50%,calc(100% - 14px) 50%;background-size:6px 6px;background-repeat:no-repeat}
+  select:focus{border-color:var(--gold);box-shadow:0 0 0 4px var(--goldbg)}
+  .ad-note{min-height:64px}
+  .ship{margin:10px 0 0;padding-left:46px;font-size:13.5px;color:#3d3a34}
+  .ship b{color:var(--golddeep);font-weight:600}
+  .ad-h{margin:20px 0 0;padding-top:14px;border-top:1px dashed var(--line)}
+  .ad-h b{display:block;font-size:14.5px} .ad-h small{display:block;color:var(--muted);font-size:12.5px;font-weight:400;margin-top:2px}
+  .addr-warn{display:flex;gap:8px;align-items:flex-start;margin:12px 0 0;padding:9px 11px;border-radius:10px;background:#fdecea;color:#8a2d1f;font-size:13px}
+  .notice{display:flex;align-items:center;gap:10px;width:100%;text-align:left;border:1px solid #f3c9c2;background:#fdf1ef;color:#8a2d1f;font:inherit;font-size:14px;font-weight:600}
+  .notice span{flex:1} .notice b{font-size:20px;line-height:1}
+  .pay{border:1.5px solid #e9b4ab;background:linear-gradient(180deg,#fff6f4,#fdecea)}
+  .pay-h{display:flex;align-items:center;gap:10px;color:#8a2d1f}
+  .pay-h .ico{background:#8a2d1f;color:#fff}
+  .pay-h b{font-size:15.5px} .pay-h small{display:block;font-weight:400;font-size:12.5px;color:#a0493a;margin-top:2px}
+  .pay-r{display:flex;justify-content:space-between;gap:10px;padding:9px 0;border-top:1px dashed #efc3bb;font-size:14px}
+  .pay-r:first-of-type{margin-top:10px}
+  .pay-r b{color:#8a2d1f;white-space:nowrap} .pay-r small{display:block;color:var(--muted);font-size:12.5px}
+  .pay-info{white-space:pre-line;margin-top:10px;padding:10px 12px;border-radius:10px;background:#fff;border:1px solid #f3d6d0;font-size:13.5px;position:relative;padding-right:46px}
+  .pay-info .copy{position:absolute;top:8px;right:8px}
+  .chip.unpaid{background:#fdecea;color:#8a2d1f}
 
   /* ---------- Inputs ---------- */
   label{display:block;font-size:13px;font-weight:600;color:#3d3a34;margin:14px 0 6px}
@@ -230,9 +251,11 @@ let LINKS = { schedule: '', thaiTracking: '', policy: '', policyText: '', prohib
 
 const app = document.getElementById('app');
 let idToken = '', lineName = '', me = null, view = 'loading', errCode = '', errDetail = '';
-let parcels = [], address = '', filter = 'all', query = '', whOpen = false;
+let DELIVERY = ['EMS', 'Lalamove'];
+let unpaid = [];
+let parcels = [], address = '', addrObj = null, filter = 'all', query = '', whOpen = false;
 const openRounds = new Set();
-const form = { name: '', phone: '', addr: '', agree: false, read: false, error: '' };
+const form = { name: '', phone: '', ad: {}, agree: false, read: false, error: '' };
 
 /* ---------- Language ---------- */
 const T = {
@@ -250,19 +273,33 @@ const T = {
     whTipGeneric: () => 'ชื่อผู้รับ = รหัสโกดัง + ชื่อของคุณ เช่น Justin Pongpol (สอบถามรหัสได้ที่แอดมิน)',
     whNameGeneric: 'รหัสโกดัง + ชื่อของคุณ',
     addrTitle: 'ที่อยู่จัดส่งในไทย', edit: 'แก้ไข', save: 'บันทึกที่อยู่', cancel: 'ยกเลิก', saving: 'กำลังบันทึก…',
-    addrEmpty: 'ยังไม่มีที่อยู่ กดแก้ไขเพื่อเพิ่ม', addrSaved: 'บันทึกที่อยู่แล้ว',
+    addrEmpty: 'ยังไม่มีที่อยู่ กดแก้ไขเพื่อเพิ่ม', addrSaved: 'บันทึกที่อยู่ใหม่แล้ว แอดมินได้รับแจ้งแล้ว',
     search: 'ค้นหาเลข Tracking', noMatch: 'ไม่พบพัสดุตามที่เลือก', noParcel: 'ยังไม่มีพัสดุในระบบ',
     pcs: n => `${n} ชิ้น`, rounds: 'รอบบินของคุณ', rAllDone: 'ส่งครบแล้ว', rDue: n => `ระหว่างจัดส่ง ${n}`, received: 'รับเข้าโกดัง', note: 'หมายเหตุ',
     pics: n => `ดูรูปพัสดุ ${n} รูป`, loadingPics: 'กำลังโหลดรูป…', picsFail: 'โหลดไม่สำเร็จ ลองอีกครั้ง', noPics: 'ยังไม่มีรูป',
     copied: 'คัดลอกแล้ว', noRound: 'ไม่ระบุรอบ',
     linkTitle: 'ผูกบัญชี LINE กับพัสดุของคุณ', linkSub: 'ทำครั้งเดียว ครั้งต่อไปกดเมนูใน LINE ก็เห็นพัสดุทันที',
     fName: 'ชื่อที่ใช้ส่งของเข้าโกดัง', fNamePh: 'เช่น Justin Pongpol',
-    fPhone: 'เบอร์โทร', fAddr: 'ที่อยู่จัดส่งในไทย', fAddrPh: 'ชื่อผู้รับ บ้านเลขที่ ถนน ตำบล อำเภอ จังหวัด รหัสไปรษณีย์',
-    link: 'ผูกบัญชี', checking: 'กำลังตรวจสอบ…', fillAll: 'กรุณากรอกให้ครบทั้ง 3 ช่อง',
+    fPhone: 'เบอร์โทรของคุณ (ใช้ยืนยันตัวตน)', fAddr: 'ที่อยู่จัดส่งในไทย', fAddrPh: 'ชื่อผู้รับ บ้านเลขที่ ถนน ตำบล อำเภอ จังหวัด รหัสไปรษณีย์',
+    link: 'ผูกบัญชี', checking: 'กำลังตรวจสอบ…', fillAll: 'กรุณากรอกให้ครบทุกช่อง',
+    adSec: 'ที่อยู่จัดส่งในไทย', adSecSub: 'ใช้ปริ้นแปะกล่อง กรุณากรอกให้ละเอียด',
+    fRecv: 'ชื่อ-นามสกุลผู้รับ', fRecvPh: 'เช่น สมชาย ใจดี', fRecvPhone: 'เบอร์โทรผู้รับ',
+    fLine1: 'บ้านเลขที่ หมู่ หมู่บ้าน/อาคาร ซอย ถนน', fLine1Ph: 'เช่น 99/1 หมู่ 2 ซ.สุขุมวิท 21 ถ.สุขุมวิท',
+    fSub: 'ตำบล / แขวง', fSubPh: 'เช่น คลองเตยเหนือ', fDist: 'อำเภอ / เขต', fDistPh: 'เช่น วัฒนา',
+    fProv: 'จังหวัด', fProvPh: 'เช่น กรุงเทพฯ', fZip: 'รหัสไปรษณีย์', fZipPh: 'เช่น 10110',
+    addrOld: 'กรุณาอัปเดตที่อยู่ให้ครบทุกช่อง เพื่อให้จัดส่งได้ถูกต้อง',
+    fShip: 'วิธีจัดส่งในไทย', fNote: 'หมายเหตุถึงแอดมิน (ถ้ามี)', fNotePh: 'เช่น โทรก่อนส่ง / ฝากไว้กับ รปภ. / ส่งหลัง 5 โมงเย็น',
+    shipL: 'วิธีจัดส่ง', noteL: 'หมายเหตุ',
+    payTitle: 'มียอดค้างชำระ', paySub: 'พัสดุในรอบนี้จะจัดส่งหลังได้รับชำระเงิน', payChip: 'รอชำระเงิน', payInfo: 'ช่องทางชำระเงิน', baht: n => `฿${n.toLocaleString('th-TH')}`,
     policy: 'ข้อกำหนดและเงื่อนไขการให้บริการ', agreeFull: v => `ข้าพเจ้าได้อ่านและเข้าใจข้อกำหนดและเงื่อนไขการให้บริการ ฉบับที่ ${v} และประกาศอัตราค่าบริการและแผนคุ้มครองแล้ว และยอมรับข้อกำหนดดังกล่าว รวมถึงข้อจำกัดความรับผิด เงื่อนไขประกัน และการเก็บใช้ข้อมูลส่วนบุคคล`, qaRates: 'ค่าบริการ', regQ: 'ลูกค้าใหม่ ยังไม่มีรหัสสมาชิก?', regLink: 'กรอกแบบฟอร์มลงทะเบียน', ratesTitle: 'อัตราค่าบริการและแผนคุ้มครอง', agreePre: 'ฉันได้อ่านและยอมรับ', agreePost: 'รวมถึงการเก็บเบอร์โทรและที่อยู่เพื่อใช้จัดส่ง', needAgree: 'กรุณาอ่านและยอมรับข้อกำหนดและเงื่อนไขการให้บริการก่อนผูกบัญชี',
     polRead: 'อ่านข้อกำหนดและเงื่อนไขการให้บริการ', polReadAgain: 'อ่านข้อกำหนดอีกครั้ง', polHint: 'กรุณาอ่านข้อกำหนดให้จบก่อน จึงจะกดยอมรับได้', polAccept: 'อ่านแล้ว ยอมรับ', polClose: 'ปิด', polScroll: 'เลื่อนอ่านให้จบเพื่อกดยอมรับ', polOpenFull: 'เปิดอ่านฉบับเต็ม', retry: 'ลองอีกครั้ง',
     pendTitle: 'ส่งคำขอแล้ว', pendSub: 'แอดมินกำลังตรวจสอบบัญชีของคุณ เมื่อยืนยันแล้วเปิดหน้านี้อีกครั้งจะเห็นพัสดุทั้งหมด',
     ERR: {
+      ADDR_NAME: 'กรุณากรอกชื่อ-นามสกุลผู้รับ',
+      ADDR_PHONE: 'เบอร์โทรผู้รับไม่ถูกต้อง ใส่ 10 หลัก เช่น 0812345678',
+      ADDR_LINE1: 'กรุณากรอกบ้านเลขที่ / ถนน',
+      ADDR_AREA: 'กรุณากรอกตำบล อำเภอ และจังหวัดให้ครบ',
+      ADDR_ZIP: 'รหัสไปรษณีย์ต้องเป็นตัวเลข 5 หลัก',
       NAME_NOT_FOUND: 'ไม่พบชื่อนี้ในระบบ กรุณากรอกให้ตรงกับชื่อที่ใช้ส่งของ เช่น Justin Pongpol',
       NAME_AMBIGUOUS: 'ชื่อนี้มีมากกว่า 1 รหัส กรุณากรอกพร้อมรหัสโกดัง เช่น Justin Pongpol หรือ UTT Pongpol',
       BAD_PHONE: 'เบอร์โทรไม่ถูกต้อง กรุณากรอกเบอร์ 10 หลัก เช่น 0812345678',
@@ -289,19 +326,33 @@ const T = {
     whTipGeneric: () => 'Recipient = warehouse code + your name, e.g. Justin Pongpol (ask our admin for your code)',
     whNameGeneric: 'Warehouse code + your name',
     addrTitle: 'Delivery address in Thailand', edit: 'Edit', save: 'Save address', cancel: 'Cancel', saving: 'Saving…',
-    addrEmpty: 'No address yet. Tap Edit to add one', addrSaved: 'Address saved',
+    addrEmpty: 'No address yet. Tap Edit to add one', addrSaved: 'New address saved. Our admin has been notified',
     search: 'Search tracking number', noMatch: 'No parcels match', noParcel: 'No parcels yet',
     pcs: n => `${n} pc${n > 1 ? 's' : ''}`, rounds: 'Your shipping rounds', rAllDone: 'All delivered', rDue: n => `${n} in transit`, received: 'Received', note: 'Note',
     pics: n => `View ${n} photo${n > 1 ? 's' : ''}`, loadingPics: 'Loading photos…', picsFail: 'Failed, tap to retry', noPics: 'No photos yet',
     copied: 'Copied', noRound: 'No round',
     linkTitle: 'Link your LINE account', linkSub: 'One-time setup. Next time, just tap the menu in LINE',
     fName: 'Name used at the warehouse', fNamePh: 'e.g. Justin Pongpol',
-    fPhone: 'Phone number', fAddr: 'Delivery address in Thailand', fAddrPh: 'Recipient, house no., street, sub-district, district, province, postcode',
-    link: 'Link account', checking: 'Checking…', fillAll: 'Please fill in all 3 fields',
+    fPhone: 'Your phone number (for verification)', fAddr: 'Delivery address in Thailand', fAddrPh: 'Recipient, house no., street, sub-district, district, province, postcode',
+    link: 'Link account', checking: 'Checking…', fillAll: 'Please fill in every field',
+    adSec: 'Delivery address in Thailand', adSecSub: 'Printed on your parcel label. Please be complete',
+    fRecv: 'Recipient full name', fRecvPh: 'e.g. Somchai Jaidee', fRecvPhone: 'Recipient phone',
+    fLine1: 'House no., moo, village/building, soi, road', fLine1Ph: 'e.g. 99/1 Moo 2, Soi Sukhumvit 21, Sukhumvit Rd',
+    fSub: 'Sub-district (Tambon / Khwaeng)', fSubPh: 'e.g. Khlong Toei Nuea', fDist: 'District (Amphoe / Khet)', fDistPh: 'e.g. Watthana',
+    fProv: 'Province', fProvPh: 'e.g. Bangkok', fZip: 'Postcode', fZipPh: 'e.g. 10110',
+    addrOld: 'Please update your address with every field so we can deliver correctly',
+    fShip: 'Delivery method in Thailand', fNote: 'Note to admin (optional)', fNotePh: 'e.g. Call before delivery / Leave with security / After 5 pm',
+    shipL: 'Delivery', noteL: 'Note',
+    payTitle: 'Payment due', paySub: 'Parcels in these rounds will be delivered once payment is received', payChip: 'Payment due', payInfo: 'How to pay', baht: n => `฿${n.toLocaleString('en-US')}`,
     policy: 'Terms & Conditions', agreeFull: v => `I have read and understood the Terms & Conditions (version ${v}) and the Service Rates & Protection Plans, and I accept them, including the limitations of liability, insurance conditions and use of my personal data`, qaRates: 'Rates', regQ: 'New customer without a member code?', regLink: 'Fill in the registration form', ratesTitle: 'Service rates & protection plans', agreePre: 'I have read and accept the', agreePost: 'including use of my phone and address for delivery', needAgree: 'Please read and accept the Terms & Conditions before linking',
     polRead: 'Read the Terms & Conditions', polReadAgain: 'Read the terms again', polHint: 'Please read the terms to the end before accepting', polAccept: 'I have read and accept', polClose: 'Close', polScroll: 'Scroll to the end to accept', polOpenFull: 'Open full version', retry: 'Try again',
     pendTitle: 'Request sent', pendSub: 'Our admin is verifying your account. Reopen this page once confirmed',
     ERR: {
+      ADDR_NAME: 'Please enter the recipient name',
+      ADDR_PHONE: 'Invalid recipient phone. Use 10 digits, e.g. 0812345678',
+      ADDR_LINE1: 'Please enter house number / street',
+      ADDR_AREA: 'Please fill in sub-district, district and province',
+      ADDR_ZIP: 'Postcode must be 5 digits',
       NAME_NOT_FOUND: 'Name not found. Enter it exactly as used for shipping, e.g. Justin Pongpol',
       NAME_AMBIGUOUS: 'This name exists under more than one code. Please include your warehouse code, e.g. Justin Pongpol',
       BAD_PHONE: 'Invalid phone number. Use 10 digits, e.g. 0812345678',
@@ -346,7 +397,8 @@ function applyLinks() {
     ratesText: en.ratesUrl ? (en.ratesText || '') : (st.ratesText || ''),
     prohibited: pick(en.prohibitedText, st.prohibitedText),
     register: pick(en.registerUrl, st.registerUrl),
-    policyVersion: st.policyVersion || '1'
+    policyVersion: st.policyVersion || '1',
+    payment: st.paymentInfo || ''
   };
 }
 function setLang(l) {
@@ -475,9 +527,9 @@ function openWarehouse() {
   const tg = el.querySelector('#whToggle'); if (tg) tg.remove();
   bindCopy(el);
 }
-function openAddress() {
+function openAddress(editing = false) {
   const { el, close } = sheet(`<div class="sheet-h"><b>${t('addrTitle')}</b><button class="x" data-x>✕</button></div>
-    <div class="sheet-body plain">${addressCard()}</div>`);
+    <div class="sheet-body plain">${addressCard(editing === true)}</div>`);
   el.querySelector('[data-x]').onclick = close;
   bindAddress();
 }
@@ -505,11 +557,29 @@ function warehouseCard(customerName) {
     </div>`;
 }
 
-function addressCard(editing = false, error = '') {
+const AK = ['name', 'phone', 'line1', 'sub', 'dist', 'prov', 'zip'];
+function addrFields(a, pre) {
+  a = a || {};
+  const f = (k, lab, ph, extra = '') => `<div><label for="${pre}${k}">${t(lab)}</label>
+    <input id="${pre}${k}" data-ak="${k}" placeholder="${esc(ph)}" value="${esc(a[k] || '')}" ${extra}></div>`;
+  return `${f('name', 'fRecv', t('fRecvPh'), 'autocomplete="name"')}
+    ${f('phone', 'fRecvPhone', '0812345678', 'type="tel" inputmode="numeric" autocomplete="tel"')}
+    ${f('line1', 'fLine1', t('fLine1Ph'), 'autocomplete="address-line1"')}
+    <div class="g2">${f('sub', 'fSub', t('fSubPh'))}${f('dist', 'fDist', t('fDistPh'))}</div>
+    <div class="g2">${f('prov', 'fProv', t('fProvPh'), 'autocomplete="address-level1"')}${f('zip', 'fZip', t('fZipPh'), 'inputmode="numeric" maxlength="5" autocomplete="postal-code"')}</div>
+    ${DELIVERY.length > 1 ? `<label for="${pre}ship">${t('fShip')}</label>
+    <select id="${pre}ship" data-ak="ship">${DELIVERY.map(o => `<option ${o === (a.ship || DELIVERY[0]) ? 'selected' : ''}>${esc(o)}</option>`).join('')}</select>` : ''}
+    <label for="${pre}note">${t('fNote')}</label>
+    <textarea id="${pre}note" data-ak="note" class="ad-note" maxlength="200" placeholder="${esc(t('fNotePh'))}">${esc(a.note || '')}</textarea>`;
+}
+function readAddr(root) { const o = {}; root.querySelectorAll('[data-ak]').forEach(i => { o[i.dataset.ak] = i.value.trim(); }); return o; }
+const addrFilled = o => AK.every(k => o && o[k]); // ship / note ไม่บังคับ
+
+function addressCard(editing = false, error = '', draft = null) {
   if (editing) return `
     <div class="card" id="addrCard">
-      <div class="sec-h"><div class="ico">${I.pin}</div><b>${t('addrTitle')}</b></div>
-      <textarea id="adEdit" style="margin-top:12px">${esc(address)}</textarea>
+      <div class="sec-h"><div class="ico">${I.pin}</div><b>${t('addrTitle')}<small>${t('adSecSub')}</small></b></div>
+      ${addrFields(draft || addrObj, 'e_')}
       ${error ? `<p class="err">${esc(error)}</p>` : ''}
       <button class="btn" id="adSave">${t('save')}</button>
       <button class="btn light" id="adCancel">${t('cancel')}</button>
@@ -518,6 +588,8 @@ function addressCard(editing = false, error = '') {
     <div class="card" id="addrCard">
       <div class="sec-h"><div class="ico">${I.pin}</div><b>${t('addrTitle')}</b><button class="link" id="adEditBtn">${t('edit')}</button></div>
       <div class="addr ${address ? '' : 'muted'}">${esc(address || t('addrEmpty'))}</div>
+      ${addrObj && (addrObj.ship || addrObj.note) ? `<div class="ship">${addrObj.ship ? `${t('shipL')}: <b>${esc(addrObj.ship)}</b>` : ''}${addrObj.note ? `<br>${t('noteL')}: ${esc(addrObj.note)}` : ''}</div>` : ''}
+      ${address && !addrObj ? `<div class="addr-warn">⚠️ <span>${t('addrOld')}</span></div>` : ''}
     </div>`;
 }
 
@@ -529,10 +601,15 @@ function bindAddress() {
   if (editBtn) return editBtn.onclick = () => swap(addressCard(true));
   document.getElementById('adCancel').onclick = () => swap(addressCard());
   document.getElementById('adSave').onclick = async e => {
-    const val = document.getElementById('adEdit').value.trim();
+    const val = readAddr(card);
+    if (!addrFilled(val)) return swap(addressCard(true, t('fillAll'), val));
     e.target.disabled = true; e.target.textContent = t('saving');
-    try { address = (await api('address', { address: val })).address; swap(addressCard()); toast(t('addrSaved')); }
-    catch (err) { swap(addressCard(true, msg(err.message))); document.getElementById('adEdit').value = val; }
+    try {
+      const r = await api('address', { address: val });
+      address = r.address; addrObj = r.addr;
+      swap(addressCard()); toast(t('addrSaved'));
+      if (view === 'linked') { const n = document.getElementById('addrFix'); if (n) n.remove(); }
+    } catch (err) { swap(addressCard(true, msg(err.message), val)); }
   };
 }
 
@@ -547,8 +624,8 @@ function viewNew() {
       <input id="nm" placeholder="${esc(t('fNamePh'))}" value="${esc(form.name)}" autocomplete="off">
       <label for="ph">${t('fPhone')}</label>
       <input id="ph" type="tel" inputmode="numeric" placeholder="0812345678" value="${esc(form.phone)}" autocomplete="tel">
-      <label for="ad">${t('fAddr')}</label>
-      <textarea id="ad" placeholder="${esc(t('fAddrPh'))}" autocomplete="street-address">${esc(form.addr)}</textarea>
+      <div class="ad-h"><b>${t('adSec')}</b><small>${t('adSecSub')}</small></div>
+      ${addrFields(form.ad, 'n_')}
       ${hasPolicy() ? `
         <div class="pol">
           <button type="button" class="polbtn" id="readPol">${I.info}<span>${form.read ? t('polReadAgain') : t('polRead')}</span><b>›</b></button>
@@ -563,17 +640,19 @@ function viewNew() {
 }
 
 function bindNew() {
-  const nm = document.getElementById('nm'), ph = document.getElementById('ph'), ad = document.getElementById('ad');
+  const nm = document.getElementById('nm'), ph = document.getElementById('ph');
   const ok = document.getElementById('ok');
-  const sync = () => { form.name = nm.value; form.phone = ph.value; form.addr = ad.value; form.agree = !!(ok && ok.checked); };
-  [nm, ph, ad].forEach(el => el.oninput = sync);
+  const sync = () => { form.name = nm.value; form.phone = ph.value; form.ad = readAddr(app); form.agree = !!(ok && ok.checked); };
+  [nm, ph, ...app.querySelectorAll('[data-ak]')].forEach(el => el.oninput = sync);
+  // เบอร์ผู้รับ: ใช้เบอร์เดียวกับเบอร์บัญชีถ้ายังไม่ได้กรอก
+  ph.onchange = () => { const rp = document.getElementById('n_phone'); if (rp && !rp.value) rp.value = ph.value; sync(); };
   if (ok) ok.onchange = sync;
   const rp = document.getElementById('readPol');
   if (rp) rp.onclick = () => { sync(); openPolicy(); };
   document.getElementById('go').onclick = async e => {
     sync();
-    const name = form.name.trim(), phone = form.phone.trim(), addr = form.addr.trim();
-    if (!name || !phone || !addr) { form.error = 'FILL'; return render(); }
+    const name = form.name.trim(), phone = form.phone.trim(), addr = form.ad;
+    if (!name || !phone || !addrFilled(addr)) { form.error = 'FILL'; return render(); }
     if (hasPolicy() && !form.agree) { form.error = 'AGREE'; return render(); }
     e.target.disabled = true; e.target.textContent = t('checking');
     try {
@@ -610,6 +689,17 @@ function parcelCard(p) {
     </div>`;
 }
 
+const normRound = r => String(r || '').replace(/เเ/g, 'แ').replace(/\s+/g, '').replace(/^รอบ/, '').toLowerCase();
+const isUnpaid = r => unpaid.some(u => normRound(u.round) === normRound(r));
+function payCard() {
+  if (!unpaid.length) return '';
+  return `<div class="card pay">
+    <div class="pay-h"><div class="ico">${I.info}</div><b>${t('payTitle')}<small>${t('paySub')}</small></b></div>
+    ${unpaid.map(u => `<div class="pay-r"><span>${esc(roundText(u.round))}${u.note ? `<small>${esc(u.note)}</small>` : ''}</span>${u.amount ? `<b>${t('baht', u.amount)}</b>` : ''}</div>`).join('')}
+    ${LINKS.payment ? `<div class="pay-info"><b style="display:block;margin-bottom:4px">${t('payInfo')}</b>${esc(LINKS.payment)}<button class="copy" data-copy="${esc(LINKS.payment)}">${I.copy}</button></div>` : ''}
+  </div>`;
+}
+
 function viewLinked() {
   const q = query.toUpperCase().replace(/\s/g, '');
   const list = parcels.filter(p =>
@@ -619,6 +709,8 @@ function viewLinked() {
   const due = parcels.length - done;
 
   let html = `
+    ${payCard()}
+    ${address && addrObj ? '' : `<button class="card notice" id="addrFix" data-qa="addrfix">⚠️<span>${t('addrOld')}</span><b>›</b></button>`}
     <div class="card stats">
       <button class="stat ${filter === 'all' ? 'on' : ''}" data-f="all"><b>${parcels.length}</b><span>${t('all')}</span></button>
       <button class="stat due ${filter === 'due' ? 'on' : ''}" data-f="due"><b>${due}</b><span>${t('due')}</span></button>
@@ -646,7 +738,7 @@ function viewLinked() {
         <button class="rhead" data-round="${esc(key)}" aria-expanded="${open}">
           <div class="rico"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M21 16v-2l-8-5V3.5a1.5 1.5 0 0 0-3 0V9l-8 5v2l8-2.5V19l-2 1.5V22l3.5-1 3.5 1v-1.5L13 19v-5.5z"/></svg></div>
           <div class="rt"><b>${esc(roundText(g.round))}</b><small>${t('pcs', g.items.length)}${latest ? ' · ' + esc(fmt(latest, { day: 'numeric', month: 'short', year: '2-digit' })) : ''}</small></div>
-          <span class="chip ${due ? 'wait' : 'ok'}">${due ? t('rDue', due) : t('rAllDone')}</span>
+          ${isUnpaid(g.round) ? `<span class="chip unpaid">${t('payChip')}</span>` : `<span class="chip ${due ? 'wait' : 'ok'}">${due ? t('rDue', due) : t('rAllDone')}</span>`}
           <span class="chev">›</span>
         </button>
         <div class="rbody" ${open ? '' : 'hidden'}>${g.items.map(parcelCard).join('')}</div>
@@ -707,7 +799,8 @@ function render() {
   app.querySelectorAll('[data-pol]').forEach(b => b.onclick = () => openPolicy(true));
   bindCopy();
   app.querySelectorAll('[data-qa="wh"]').forEach(x => x.onclick = openWarehouse);
-  app.querySelectorAll('[data-qa="addr"]').forEach(x => x.onclick = openAddress);
+  app.querySelectorAll('[data-qa="addr"]').forEach(x => x.onclick = () => openAddress());
+  app.querySelectorAll('[data-qa="addrfix"]').forEach(x => x.onclick = () => openAddress(true));
   app.querySelectorAll('[data-qa="ban"]').forEach(x => x.onclick = openProhibited);
   app.querySelectorAll('[data-qa="pol"]').forEach(x => x.onclick = () => openPolicy(true));
   app.querySelectorAll('[data-qa="rates"]').forEach(x => x.onclick = openRates);
@@ -811,10 +904,11 @@ async function load() {
     view = me.state;
     if (me.settings) {
       WAREHOUSE = me.settings.warehouse || WAREHOUSE;
+      if (me.settings.deliveryOptions && me.settings.deliveryOptions.length) DELIVERY = me.settings.deliveryOptions;
       applyLinks();
       document.getElementById('whCode').textContent = WAREHOUSE.code;
     }
-    if (view === 'linked') { parcels = me.parcels; address = me.address || ''; }
+    if (view === 'linked') { parcels = me.parcels; address = me.address || ''; addrObj = me.addr || null; unpaid = me.unpaid || []; }
   } catch (e) { view = 'error'; errCode = e.message; errDetail = e.detail || ''; }
   render();
 }
