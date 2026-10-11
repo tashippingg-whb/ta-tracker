@@ -276,7 +276,7 @@ const T = {
     addrEmpty: 'ยังไม่มีที่อยู่ กดแก้ไขเพื่อเพิ่ม', addrSaved: 'บันทึกที่อยู่ใหม่แล้ว แอดมินได้รับแจ้งแล้ว',
     search: 'ค้นหาเลข Tracking', noMatch: 'ไม่พบพัสดุตามที่เลือก', noParcel: 'ยังไม่มีพัสดุในระบบ',
     pcs: n => `${n} ชิ้น`, rounds: 'รอบบินของคุณ', rAllDone: 'ส่งครบแล้ว', rDue: n => `ระหว่างจัดส่ง ${n}`, received: 'รับเข้าโกดัง', note: 'หมายเหตุ',
-    pics: n => `ดูรูปพัสดุ ${n} รูป`, loadingPics: 'กำลังโหลดรูป…', picsFail: 'โหลดไม่สำเร็จ ลองอีกครั้ง', noPics: 'ยังไม่มีรูป',
+    pics: n => `ดูรูปพัสดุ ${n} รูป`, prefilled: 'ดึงที่อยู่เดิมให้แล้ว ตรวจสอบก่อนกดยืนยัน', loadingPics: 'กำลังโหลดรูป…', picsFail: 'โหลดไม่สำเร็จ ลองอีกครั้ง', noPics: 'ยังไม่มีรูป',
     copied: 'คัดลอกแล้ว', noRound: 'ไม่ระบุรอบ',
     linkTitle: 'ผูกบัญชี LINE กับพัสดุของคุณ', linkSub: 'ทำครั้งเดียว ครั้งต่อไปกดเมนูใน LINE ก็เห็นพัสดุทันที',
     fName: 'ชื่อที่ใช้ส่งของเข้าโกดัง', fNamePh: 'เช่น Justin Pongpol',
@@ -329,7 +329,7 @@ const T = {
     addrEmpty: 'No address yet. Tap Edit to add one', addrSaved: 'New address saved. Our admin has been notified',
     search: 'Search tracking number', noMatch: 'No parcels match', noParcel: 'No parcels yet',
     pcs: n => `${n} pc${n > 1 ? 's' : ''}`, rounds: 'Your shipping rounds', rAllDone: 'All delivered', rDue: n => `${n} in transit`, received: 'Received', note: 'Note',
-    pics: n => `View ${n} photo${n > 1 ? 's' : ''}`, loadingPics: 'Loading photos…', picsFail: 'Failed, tap to retry', noPics: 'No photos yet',
+    pics: n => `View ${n} photo${n > 1 ? 's' : ''}`, prefilled: 'We filled in your saved address. Please check it.', loadingPics: 'Loading photos…', picsFail: 'Failed, tap to retry', noPics: 'No photos yet',
     copied: 'Copied', noRound: 'No round',
     linkTitle: 'Link your LINE account', linkSub: 'One-time setup. Next time, just tap the menu in LINE',
     fName: 'Name used at the warehouse', fNamePh: 'e.g. Justin Pongpol',
@@ -646,7 +646,26 @@ function bindNew() {
   const sync = () => { form.name = nm.value; form.phone = ph.value; form.ad = readAddr(app); form.agree = !!(ok && ok.checked); };
   [nm, ph, ...app.querySelectorAll('[data-ak]')].forEach(el => el.oninput = sync);
   // เบอร์ผู้รับ: ใช้เบอร์เดียวกับเบอร์บัญชีถ้ายังไม่ได้กรอก
-  ph.onchange = () => { const rp = document.getElementById('n_phone'); if (rp && !rp.value) rp.value = ph.value; sync(); };
+  ph.onchange = () => { const rp = document.getElementById('n_phone'); if (rp && !rp.value) rp.value = ph.value; sync(); prefill(); };
+  nm.onchange = () => { sync(); prefill(); };
+  // ลูกค้าเคยกรอกที่อยู่ไว้ (ฟอร์มเดิม) → ชื่อ + เบอร์ตรงกัน เติมที่อยู่ให้เลย
+  const prefill = async () => {
+    const name = nm.value.trim(), phone = ph.value.replace(/\D/g, ''), key = name + '|' + phone;
+    if (!name || phone.length < 9 || bindNew.tried === key) return;
+    const cur = readAddr(app);
+    if (['line1', 'sub', 'dist', 'prov', 'zip'].some(k => cur[k])) return;      // ลูกค้าเริ่มพิมพ์เองแล้ว ไม่ทับ
+    bindNew.tried = key;
+    try {
+      const r = await api('prefill', { name, phone }, 1);
+      if (!r.addr || view !== 'new') return;
+      const now = readAddr(app);
+      if (['line1', 'sub', 'dist', 'prov', 'zip'].some(k => now[k])) return;
+      const ad = Object.assign({}, now);
+      Object.keys(r.addr).forEach(k => { if (r.addr[k] && (!ad[k] || k === 'ship')) ad[k] = r.addr[k]; });
+      form.name = nm.value; form.phone = ph.value; form.ad = ad; form.agree = !!(ok && ok.checked);
+      render(); toast(t('prefilled'));
+    } catch (e) {}
+  };
   if (ok) ok.onchange = sync;
   const rp = document.getElementById('readPol');
   if (rp) rp.onclick = () => { sync(); openPolicy(); };
