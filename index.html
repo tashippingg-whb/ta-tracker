@@ -144,6 +144,21 @@
   /* ---------- Address ---------- */
   .addr{white-space:pre-line;margin:12px 0 0;padding-left:46px;color:#3d3a34}
   .g2{display:grid;grid-template-columns:1fr 1fr;gap:0 10px}
+  .ab{margin-bottom:12px}
+  .ab .ab-h{display:flex;align-items:center;gap:10px}.ab .ab-h b{flex:1;font-size:15.5px}
+  .ab-act{display:flex;gap:14px;flex-wrap:wrap;padding-left:46px;margin-top:6px}.ab-act .del{color:#b3261e}
+  .ab-tip{margin:10px 4px 0;font-size:13px}
+  .ab-chips{display:flex;gap:8px;flex-wrap:wrap;margin:8px 0 4px}
+  .ab-chip{border:1px solid var(--line);background:var(--goldbg);color:var(--golddeep);border-radius:999px;padding:5px 12px;font:inherit;font-size:13px;font-weight:600}
+  .ab-opt{display:block;width:100%;text-align:left;font:inherit;color:inherit;border:2px solid transparent;cursor:pointer}
+  .ab-opt.on{border-color:var(--gold)}
+  .ab-opt .radio{width:20px;height:20px;border-radius:50%;border:2px solid var(--line);flex-shrink:0}
+  .ab-opt.on .radio{border:6px solid var(--gold)}
+  .ab-opt .addr{padding-left:30px;font-size:13.5px}
+  .rpick{display:flex;align-items:center;gap:8px;width:calc(100% - 28px);margin:0 14px 12px;padding:9px 12px;border:1px dashed var(--gold);border-radius:12px;background:var(--goldbg);font:inherit;font-size:13.5px;color:var(--ink);text-align:left}
+  .rpick span{color:var(--muted)} .rpick b{flex:1;color:var(--golddeep)} .rpick em{font-style:normal;color:var(--golddeep)}
+  .rpick.lock{border-style:solid;border-color:var(--line);background:var(--bg)} .rpick.lock b{color:var(--ink)} .rpick small{color:var(--muted);font-size:12px}
+
   select{width:100%;padding:13px 14px;border:1.5px solid var(--line);border-radius:12px;font:inherit;background:#fcfbf8;color:var(--ink);outline:none;-webkit-appearance:none;appearance:none;background-image:linear-gradient(45deg,transparent 50%,#8a6d1f 50%),linear-gradient(135deg,#8a6d1f 50%,transparent 50%);background-position:calc(100% - 20px) 50%,calc(100% - 14px) 50%;background-size:6px 6px;background-repeat:no-repeat}
   select:focus{border-color:var(--gold);box-shadow:0 0 0 4px var(--goldbg)}
   .ad-note{min-height:64px}
@@ -293,6 +308,10 @@ const T = {
     payTitle: 'มียอดค้างชำระ', paySub: 'พัสดุในรอบนี้จะจัดส่งหลังได้รับชำระเงิน', payChip: 'รอชำระเงิน', payInfo: 'ช่องทางชำระเงิน', baht: n => `฿${n.toLocaleString('th-TH')}`,
     policy: 'ข้อกำหนดและเงื่อนไขการให้บริการ', agreeFull: v => `ข้าพเจ้าได้อ่านและเข้าใจข้อกำหนดและเงื่อนไขการให้บริการ ฉบับที่ ${v} และประกาศอัตราค่าบริการและแผนคุ้มครองแล้ว และยอมรับข้อกำหนดดังกล่าว รวมถึงข้อจำกัดความรับผิด เงื่อนไขประกัน และการเก็บใช้ข้อมูลส่วนบุคคล`, qaRates: 'ค่าบริการ', regQ: 'ลูกค้าใหม่ ยังไม่มีรหัสสมาชิก?', regLink: 'กรอกแบบฟอร์มลงทะเบียน', ratesTitle: 'อัตราค่าบริการและแผนคุ้มครอง', agreePre: 'ฉันได้อ่านและยอมรับ', agreePost: 'รวมถึงการเก็บเบอร์โทรและที่อยู่เพื่อใช้จัดส่ง', needAgree: 'กรุณาอ่านและยอมรับข้อกำหนดและเงื่อนไขการให้บริการก่อนผูกบัญชี',
     polRead: 'อ่านข้อกำหนดและเงื่อนไขการให้บริการ', polReadAgain: 'อ่านข้อกำหนดอีกครั้ง', polHint: 'กรุณาอ่านข้อกำหนดให้จบก่อน จึงจะกดยอมรับได้', polAccept: 'อ่านแล้ว ยอมรับ', polClose: 'ปิด', polScroll: 'เลื่อนอ่านให้จบเพื่อกดยอมรับ', polOpenFull: 'เปิดอ่านฉบับเต็ม', retry: 'ลองอีกครั้ง',
+    abDefault: 'ค่าเริ่มต้น', abNoLabel: 'ที่อยู่', abMakeDef: 'ตั้งเป็นค่าเริ่มต้น', abDel: 'ลบ', abDelQ: 'ลบที่อยู่นี้?', abDelDone: 'ลบแล้ว', abDefDone: 'ตั้งเป็นค่าเริ่มต้นแล้ว',
+    abAdd: (n, m) => `เพิ่มที่อยู่ (${n}/${m})`, abFull: m => `บันทึกได้สูงสุด ${m} ที่อยู่`, abTip: 'บันทึกได้หลายที่อยู่ แล้วเลือกได้ว่าแต่ละรอบบินจะส่งไปที่ไหน (กดที่ 📍 ในการ์ดรอบบิน) ถ้าไม่เลือก จะส่งที่อยู่ค่าเริ่มต้น',
+    abHome: 'บ้าน', abWork: 'ที่ทำงาน', abFamily: 'บ้านพ่อแม่', abEditT: 'แก้ไขที่อยู่', abNewT: 'เพิ่มที่อยู่ใหม่', abLabel: 'ตั้งชื่อที่อยู่นี้', abLabelPh: 'เช่น บ้าน / ที่ทำงาน',
+    abSendTo: 'รอบนี้ส่งที่', abLocked: 'เริ่มจัดส่งแล้ว เปลี่ยนไม่ได้', abPickT: r => `เลือกที่อยู่ส่ง · ${r}`, abPicked: n => `รอบนี้จะส่งไปที่ ${n}`,
     pendTitle: 'ส่งคำขอแล้ว', pendSub: 'แอดมินกำลังตรวจสอบบัญชีของคุณ เมื่อยืนยันแล้วเปิดหน้านี้อีกครั้งจะเห็นพัสดุทั้งหมด',
     ERR: {
       ADDR_NAME: 'กรุณากรอกชื่อ-นามสกุลผู้รับ',
@@ -308,6 +327,9 @@ const T = {
       INVALID_TOKEN: 'เซสชันหมดอายุ กรุณาปิดหน้านี้แล้วเปิดใหม่จาก LINE',
       NO_TOKEN: 'กรุณาเปิดหน้านี้จากเมนูใน LINE',
       NETWORK: 'เชื่อมต่อไม่สำเร็จ กรุณากดลองอีกครั้ง',
+      BOOK_FULL: 'บันทึกที่อยู่ได้สูงสุด 3 ที่ กรุณาลบหรือแก้ไขที่อยู่เดิม',
+      BOOK_DEF: 'ลบที่อยู่ค่าเริ่มต้นไม่ได้ กรุณาตั้งที่อยู่อื่นเป็นค่าเริ่มต้นก่อน',
+      ROUND_LOCKED: 'รอบนี้เริ่มจัดส่งแล้ว เปลี่ยนที่อยู่ไม่ได้ กรุณาติดต่อแอดมิน',
       NEED_AGREE: 'กรุณาอ่านและยอมรับข้อกำหนดและเงื่อนไขการให้บริการก่อนผูกบัญชี',
       _: 'เกิดข้อผิดพลาด กรุณาลองใหม่ หรือติดต่อแอดมินทาง LINE'
     }
@@ -346,6 +368,10 @@ const T = {
     payTitle: 'Payment due', paySub: 'Parcels in these rounds will be delivered once payment is received', payChip: 'Payment due', payInfo: 'How to pay', baht: n => `฿${n.toLocaleString('en-US')}`,
     policy: 'Terms & Conditions', agreeFull: v => `I have read and understood the Terms & Conditions (version ${v}) and the Service Rates & Protection Plans, and I accept them, including the limitations of liability, insurance conditions and use of my personal data`, qaRates: 'Rates', regQ: 'New customer without a member code?', regLink: 'Fill in the registration form', ratesTitle: 'Service rates & protection plans', agreePre: 'I have read and accept the', agreePost: 'including use of my phone and address for delivery', needAgree: 'Please read and accept the Terms & Conditions before linking',
     polRead: 'Read the Terms & Conditions', polReadAgain: 'Read the terms again', polHint: 'Please read the terms to the end before accepting', polAccept: 'I have read and accept', polClose: 'Close', polScroll: 'Scroll to the end to accept', polOpenFull: 'Open full version', retry: 'Try again',
+    abDefault: 'Default', abNoLabel: 'Address', abMakeDef: 'Set as default', abDel: 'Delete', abDelQ: 'Delete this address?', abDelDone: 'Deleted', abDefDone: 'Default address updated',
+    abAdd: (n, m) => `Add address (${n}/${m})`, abFull: m => `You can save up to ${m} addresses`, abTip: 'Save several addresses, then choose where each flight round goes (tap 📍 on the round card). If you don\'t choose, we use your default address.',
+    abHome: 'Home', abWork: 'Work', abFamily: 'Family', abEditT: 'Edit address', abNewT: 'New address', abLabel: 'Name this address', abLabelPh: 'e.g. Home / Office',
+    abSendTo: 'Ship this round to', abLocked: 'Already shipping — can\'t change', abPickT: r => `Choose address · ${r}`, abPicked: n => `This round will ship to ${n}`,
     pendTitle: 'Request sent', pendSub: 'Our admin is verifying your account. Reopen this page once confirmed',
     ERR: {
       ADDR_NAME: 'Please enter the recipient name',
@@ -361,6 +387,9 @@ const T = {
       INVALID_TOKEN: 'Session expired. Please close and reopen from LINE',
       NO_TOKEN: 'Please open this page from the LINE menu',
       NETWORK: 'Connection failed. Please tap Try again',
+      BOOK_FULL: 'You can save up to 3 addresses. Please delete or edit one',
+      BOOK_DEF: 'You can\'t delete your default address. Set another one as default first',
+      ROUND_LOCKED: 'This round is already shipping. Please contact admin to change the address',
       NEED_AGREE: 'Please read and accept the Terms & Conditions before linking',
       _: 'Something went wrong. Please try again or contact us on LINE'
     }
@@ -527,12 +556,6 @@ function openWarehouse() {
   const tg = el.querySelector('#whToggle'); if (tg) tg.remove();
   bindCopy(el);
 }
-function openAddress(editing = false) {
-  const { el, close } = sheet(`<div class="sheet-h"><b>${t('addrTitle')}</b><button class="x" data-x>✕</button></div>
-    <div class="sheet-body plain">${addressCard(editing === true)}</div>`);
-  el.querySelector('[data-x]').onclick = close;
-  bindAddress();
-}
 
 function warehouseCard(customerName) {
   const w = WAREHOUSE;
@@ -575,43 +598,105 @@ function addrFields(a, pre) {
 function readAddr(root) { const o = {}; root.querySelectorAll('[data-ak]').forEach(i => { o[i.dataset.ak] = i.value.trim(); }); return o; }
 const addrFilled = o => AK.every(k => o && o[k]); // ship / note ไม่บังคับ
 
-function addressCard(editing = false, error = '', draft = null) {
-  if (editing) return `
-    <div class="card" id="addrCard">
-      <div class="sec-h"><div class="ico">${I.pin}</div><b>${t('addrTitle')}<small>${t('adSecSub')}</small></b></div>
-      ${addrFields(draft || addrObj, 'e_')}
-      ${error ? `<p class="err">${esc(error)}</p>` : ''}
-      <button class="btn" id="adSave">${t('save')}</button>
-      <button class="btn light" id="adCancel">${t('cancel')}</button>
-    </div>`;
-  return `
-    <div class="card" id="addrCard">
-      <div class="sec-h"><div class="ico">${I.pin}</div><b>${t('addrTitle')}</b><button class="link" id="adEditBtn">${t('edit')}</button></div>
-      <div class="addr ${address ? '' : 'muted'}">${esc(address || t('addrEmpty'))}</div>
-      ${addrObj && (addrObj.ship || addrObj.note) ? `<div class="ship">${addrObj.ship ? `${t('shipL')}: <b>${esc(addrObj.ship)}</b>` : ''}${addrObj.note ? `<br>${t('noteL')}: ${esc(addrObj.note)}` : ''}</div>` : ''}
-      ${address && !addrObj ? `<div class="addr-warn">⚠️ <span>${t('addrOld')}</span></div>` : ''}
-    </div>`;
+/* ---------- สมุดที่อยู่ (สูงสุด 3 ที่) + เลือกที่อยู่ตามรอบ ---------- */
+let book = { def: '', max: 3, list: [] }, picks = {};
+const ROUND_LOCK = /กำลังจัดส่งในไทย|สำเร็จ|ส่งแล้ว|ถึงแล้ว/;
+const roundLocked = items => items.some(p => ROUND_LOCK.test(p.status || ''));
+const abById = id => book.list.find(x => x.id === id);
+const abName = x => x ? (x.label || (x.id === book.def ? t('abDefault') : t('abNoLabel'))) : '';
+function abApply(r) {
+  book = r.book || book; picks = r.picks || {};
+  if (r.address !== undefined) { address = r.address; addrObj = r.addr || null; }
+  if (me) { me.book = book; me.picks = picks; me.address = address; me.addr = addrObj; saveCache(); }
 }
-
-function bindAddress() {
-  const card = document.getElementById('addrCard');
-  if (!card) return;
-  const swap = html => { card.outerHTML = html; bindAddress(); };
-  const editBtn = document.getElementById('adEditBtn');
-  if (editBtn) return editBtn.onclick = () => swap(addressCard(true));
-  document.getElementById('adCancel').onclick = () => swap(addressCard());
-  document.getElementById('adSave').onclick = async e => {
-    const val = readAddr(card);
-    if (!addrFilled(val)) return swap(addressCard(true, t('fillAll'), val));
-    e.target.disabled = true; e.target.textContent = t('saving');
-    try {
-      const r = await api('address', { address: val });
-      address = r.address; addrObj = r.addr;
-      if (me) { me.address = r.address; me.addr = r.addr; saveCache(); }
-      swap(addressCard()); toast(t('addrSaved'));
-      if (view === 'linked') { const n = document.getElementById('addrFix'); if (n) n.remove(); }
-    } catch (err) { swap(addressCard(true, msg(err.message), val)); }
+function bookView() {
+  const cards = book.list.map(x => {
+    const def = x.id === book.def, a = x.addr || {};
+    return `<div class="card ab">
+      <div class="ab-h"><div class="ico">${I.pin}</div><b>${esc(abName(x))}</b>${def ? `<span class="chip ok">⭐ ${t('abDefault')}</span>` : ''}</div>
+      <div class="addr">${esc(x.full)}</div>
+      ${a.ship || a.note ? `<div class="ship">${a.ship ? `${t('shipL')}: <b>${esc(a.ship)}</b>` : ''}${a.note ? `<br>${t('noteL')}: ${esc(a.note)}` : ''}</div>` : ''}
+      <div class="ab-act"><button class="link" data-ab-edit="${x.id}">${t('edit')}</button>
+        ${def ? '' : `<button class="link" data-ab-def="${x.id}">${t('abMakeDef')}</button><button class="link del" data-ab-del="${x.id}">${t('abDel')}</button>`}</div>
+    </div>`;
+  }).join('');
+  return `${cards || `<div class="card empty">${t('addrEmpty')}</div>`}
+    ${book.list.length < (book.max || 3) ? `<button class="btn" data-ab-add>➕ ${t('abAdd', book.list.length, book.max || 3)}</button>` : `<p class="muted ab-tip">${t('abFull', book.max || 3)}</p>`}
+    <div class="tip ab-tip">${I.info}<span>${t('abTip')}</span></div>`;
+}
+function abForm(x, error) {
+  x = x || {};
+  const a = Object.assign({}, x.addr || x);
+  const chips = ['🏠 ' + t('abHome'), '🏢 ' + t('abWork'), '👪 ' + t('abFamily')];
+  return `<div class="card" id="abForm" data-id="${esc(x.id || '')}">
+    <div class="sec-h"><div class="ico">${I.pin}</div><b>${x.id ? t('abEditT') : t('abNewT')}<small>${t('adSecSub')}</small></b></div>
+    <label for="abLabel">${t('abLabel')}</label>
+    <input id="abLabel" maxlength="20" placeholder="${esc(t('abLabelPh'))}" value="${esc(x.label || a.label || '')}">
+    <div class="ab-chips">${chips.map(c => `<button type="button" class="ab-chip" data-chip="${esc(c)}">${esc(c)}</button>`).join('')}</div>
+    ${addrFields(a, 'e_')}
+    ${error ? `<p class="err">${esc(error)}</p>` : ''}
+    <button class="btn" id="abSave">${t('save')}</button>
+    <button class="btn light" id="abCancel">${t('cancel')}</button>
+  </div>`;
+}
+function openAddress(editing = false) {
+  const { el, close } = sheet(`<div class="sheet-h"><b>${t('addrTitle')}</b><button class="x" data-x>✕</button></div>
+    <div class="sheet-body plain" id="abRoot"></div>`);
+  el.querySelector('[data-x]').onclick = () => { close(); render(); };
+  const root = el.querySelector('#abRoot');
+  const showList = () => { root.innerHTML = bookView(); bindList(); };
+  const showForm = (x, err, draft) => {
+    root.innerHTML = abForm(draft || x, err); root.scrollTop = 0;
+    const f = root.querySelector('#abForm'), lab = f.querySelector('#abLabel');
+    f.querySelectorAll('[data-chip]').forEach(c => c.onclick = () => { lab.value = c.dataset.chip; });
+    f.querySelector('#abCancel').onclick = showList;
+    f.querySelector('#abSave').onclick = async e => {
+      const val = readAddr(f); val.label = lab.value.trim(); val.id = f.dataset.id;
+      if (!addrFilled(val)) return showForm(x, t('fillAll'), Object.assign({ id: val.id }, { addr: val, label: val.label }));
+      e.target.disabled = true; e.target.textContent = t('saving');
+      try { abApply(await api('book', { op: 'save', entry: val })); toast(t('addrSaved')); showList(); }
+      catch (err) { showForm(x, msg(err.message), { id: val.id, addr: val, label: val.label }); }
+    };
   };
+  const run = async (btn, req, okMsg) => {
+    btn.disabled = true;
+    try { abApply(await api('book', req)); if (okMsg) toast(okMsg); showList(); }
+    catch (err) { btn.disabled = false; toast(msg(err.message)); }
+  };
+  function bindList() {
+    root.querySelectorAll('[data-ab-edit]').forEach(b => b.onclick = () => showForm(abById(b.dataset.abEdit)));
+    root.querySelectorAll('[data-ab-def]').forEach(b => b.onclick = () => run(b, { op: 'default', id: b.dataset.abDef }, t('abDefDone')));
+    root.querySelectorAll('[data-ab-del]').forEach(b => b.onclick = () => { if (confirm(t('abDelQ'))) run(b, { op: 'delete', id: b.dataset.abDel }, t('abDelDone')); });
+    const add = root.querySelector('[data-ab-add]'); if (add) add.onclick = () => showForm(null);
+  }
+  if (editing === true) showForm(abById(book.def) || null); else showList();
+}
+function bindAddress() {}
+// การ์ดรอบบิน: เลือกว่ารอบนี้ส่งไปที่ไหน
+function pickRow(round, items) {
+  if (!book.list.length) return '';
+  const k = normRound(round), x = abById(picks[k]) || abById(book.def);
+  const lock = roundLocked(items);
+  return `<button class="rpick ${lock ? 'lock' : ''}" data-pick="${esc(round || '')}" ${lock ? 'disabled' : ''}>
+    <span>${lock ? '🔒' : '📍'} ${t('abSendTo')}</span><b>${esc(abName(x))}</b>${lock ? `<small>${t('abLocked')}</small>` : '<em>▾</em>'}</button>`;
+}
+function openPick(round) {
+  const k = normRound(round), cur = picks[k] || book.def;
+  const { el, close } = sheet(`<div class="sheet-h"><b>${t('abPickT', roundText(round))}</b><button class="x" data-x>✕</button></div>
+    <div class="sheet-body plain">
+      ${book.list.map(x => `<button class="card ab ab-opt ${x.id === cur ? 'on' : ''}" data-id="${x.id}">
+        <div class="ab-h"><span class="radio"></span><b>${esc(abName(x))}</b>${x.id === book.def ? `<span class="chip ok">⭐ ${t('abDefault')}</span>` : ''}</div>
+        <div class="addr">${esc(x.full)}</div></button>`).join('')}
+      ${book.list.length < (book.max || 3) ? `<button class="btn light" data-new>➕ ${t('abAdd', book.list.length, book.max || 3)}</button>` : ''}
+    </div>`);
+  el.querySelector('[data-x]').onclick = close;
+  const nb = el.querySelector('[data-new]'); if (nb) nb.onclick = () => { close(); openAddress(); };
+  el.querySelectorAll('[data-id]').forEach(b => b.onclick = async () => {
+    if (b.dataset.id === cur) return close();
+    el.querySelectorAll('[data-id]').forEach(x => x.disabled = true);
+    try { abApply(await api('book', { op: 'pick', round, id: b.dataset.id })); close(); render(); toast(t('abPicked', abName(abById(b.dataset.id)))); }
+    catch (err) { el.querySelectorAll('[data-id]').forEach(x => x.disabled = false); toast(msg(err.message)); }
+  });
 }
 
 /* ---------- Views ---------- */
@@ -761,6 +846,7 @@ function viewLinked() {
           ${isUnpaid(g.round) ? `<span class="chip unpaid">${t('payChip')}</span>` : `<span class="chip ${due ? 'wait' : 'ok'}">${due ? t('rDue', due) : t('rAllDone')}</span>`}
           <span class="chev">›</span>
         </button>
+        ${pickRow(g.round, g.items)}
         <div class="rbody" ${open ? '' : 'hidden'}>${g.items.map(parcelCard).join('')}</div>
       </div>`;
   });
@@ -772,9 +858,10 @@ function bindLinked() {
   app.querySelectorAll('[data-round]').forEach(h => h.onclick = () => {
     const open = h.getAttribute('aria-expanded') !== 'true';
     h.setAttribute('aria-expanded', open);
-    h.nextElementSibling.hidden = !open;
+    h.parentElement.querySelector('.rbody').hidden = !open;
     open ? openRounds.add(h.dataset.round) : openRounds.delete(h.dataset.round);
   });
+  app.querySelectorAll('[data-pick]').forEach(b => b.onclick = () => openPick(b.dataset.pick));
   app.querySelectorAll('[data-f]').forEach(s => s.onclick = () => { filter = s.dataset.f; render(); });
   const qi = document.getElementById('q');
   qi.oninput = () => {
@@ -936,7 +1023,7 @@ function applyMe(m) {
       applyLinks();
       document.getElementById('whCode').textContent = WAREHOUSE.code;
     }
-    if (view === 'linked') { parcels = me.parcels; address = me.address || ''; addrObj = me.addr || null; unpaid = me.unpaid || []; }
+    if (view === 'linked') { parcels = me.parcels; address = me.address || ''; addrObj = me.addr || null; unpaid = me.unpaid || []; book = me.book || { def: '', max: 3, list: [] }; picks = me.picks || {}; }
 }
 async function load(background) {
   try {
