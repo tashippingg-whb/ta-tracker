@@ -674,7 +674,7 @@ function openAddress(editing = false) {
 function bindAddress() {}
 // การ์ดรอบบิน: เลือกว่ารอบนี้ส่งไปที่ไหน
 function pickRow(round, items) {
-  if (!book.list.length) return '';
+  if (!book.list.length || items.every(p => isDone(p.status))) return '';   // ส่งครบแล้ว ไม่ต้องแสดง
   const k = normRound(round), x = abById(picks[k]) || abById(book.def);
   const lock = roundLocked(items);
   return `<button class="rpick ${lock ? 'lock' : ''}" data-pick="${esc(round || '')}" ${lock ? 'disabled' : ''}>
@@ -692,10 +692,14 @@ function openPick(round) {
   el.querySelector('[data-x]').onclick = close;
   const nb = el.querySelector('[data-new]'); if (nb) nb.onclick = () => { close(); openAddress(); };
   el.querySelectorAll('[data-id]').forEach(b => b.onclick = async () => {
-    if (b.dataset.id === cur) return close();
-    el.querySelectorAll('[data-id]').forEach(x => x.disabled = true);
-    try { abApply(await api('book', { op: 'pick', round, id: b.dataset.id })); close(); render(); toast(t('abPicked', abName(abById(b.dataset.id)))); }
-    catch (err) { el.querySelectorAll('[data-id]').forEach(x => x.disabled = false); toast(msg(err.message)); }
+    const id = b.dataset.id;
+    close();
+    if (id === cur) return;
+    const prev = Object.assign({}, picks);                       // เปลี่ยนบนจอทันที แล้วค่อยบันทึกเบื้องหลัง
+    if (id === book.def) delete picks[k]; else picks[k] = id;
+    render(); toast(t('abPicked', abName(abById(id))));
+    try { abApply(await api('book', { op: 'pick', round, id })); render(); }
+    catch (err) { picks = prev; render(); toast(msg(err.message)); }
   });
 }
 
