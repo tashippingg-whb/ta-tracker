@@ -782,14 +782,14 @@ function viewPending() {
     ${quickBar(false)}`;
 }
 
-function parcelCard(p) {
+function parcelCard(p, quiet) {                  // quiet = รอบนี้ส่งครบแล้ว ไม่ต้องโชว์สถานะซ้ำทุกชิ้น
   const c = chipClass(p.status);
   const when = p.receivedTs ? dTime(p.receivedTs) : p.received;
   return `
     <div class="card parcel ${c}" data-trk="${esc(p.tracking)}">
       <div class="top">
         <div class="trk"><span>${esc(p.tracking)}</span><button class="copy" data-copy="${esc(p.tracking)}" aria-label="copy">${I.copy}</button></div>
-        <span class="chip ${c}">${esc(statusText(p.status))}</span>
+        ${quiet ? '' : `<span class="chip ${c}">${esc(statusText(p.status))}</span>`}
       </div>
       ${when ? `<div class="meta">${I.calS}${t('received')} ${esc(when)}</div>` : ''}
       ${p.note ? `<div class="meta">${t('note')}: ${esc(p.note)}</div>` : ''}
@@ -851,7 +851,7 @@ function viewLinked() {
           <span class="chev">›</span>
         </button>
         ${pickRow(g.round, g.items)}
-        <div class="rbody" ${open ? '' : 'hidden'}>${g.items.map(parcelCard).join('')}</div>
+        <div class="rbody" ${open ? '' : 'hidden'}>${g.items.map(p => parcelCard(p, !due)).join('')}</div>
       </div>`;
   });
   return html;
