@@ -157,6 +157,13 @@
   .ab-opt .addr{padding-left:30px;font-size:13.5px}
   .rpick{display:flex;align-items:center;gap:8px;width:calc(100% - 28px);margin:0 14px 12px;padding:9px 12px;border:1px dashed var(--gold);border-radius:12px;background:var(--goldbg);font:inherit;font-size:13.5px;color:var(--ink);text-align:left}
   .rpick span{color:var(--muted)} .rpick b{flex:1;color:var(--golddeep)} .rpick em{font-style:normal;color:var(--golddeep)}
+  .sph{display:flex;align-items:center;gap:8px;width:calc(100% - 28px);margin:-4px 14px 12px;padding:8px 12px;border:1px solid var(--line);border-radius:12px;background:var(--card);font:inherit;font-size:13.5px;color:var(--ink);text-align:left}
+  .sph b{flex:1;font-weight:600} .sph small{color:var(--muted);font-size:12px} .sph em{font-style:normal;color:var(--golddeep);font-weight:600}
+  .sgrid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+  .sgrid button{padding:0;border:0;border-radius:12px;overflow:hidden;background:#e9e5dc;aspect-ratio:3/4;display:block}
+  .sgrid img{width:100%;height:100%;object-fit:cover;display:block;opacity:0;transition:opacity .25s}.sgrid img.ok{opacity:1}
+  .lbx{position:fixed;inset:0;z-index:40;background:rgba(0,0,0,.92);display:flex;align-items:center;justify-content:center}
+  .lbx img{max-width:100%;max-height:100%;object-fit:contain}.lbx .x{position:absolute;top:14px;right:14px;background:rgba(255,255,255,.15);color:#fff}
   .rpick.lock{border-style:solid;border-color:var(--line);background:var(--bg)} .rpick.lock b{color:var(--ink)} .rpick small{color:var(--muted);font-size:12px}
 
   select{width:100%;padding:13px 14px;border:1.5px solid var(--line);border-radius:12px;font:inherit;background:#fcfbf8;color:var(--ink);outline:none;-webkit-appearance:none;appearance:none;background-image:linear-gradient(45deg,transparent 50%,#8a6d1f 50%),linear-gradient(135deg,#8a6d1f 50%,transparent 50%);background-position:calc(100% - 20px) 50%,calc(100% - 14px) 50%;background-size:6px 6px;background-repeat:no-repeat}
@@ -311,6 +318,7 @@ const T = {
     abDefault: 'ค่าเริ่มต้น', abNoLabel: 'ที่อยู่', abMakeDef: 'ตั้งเป็นค่าเริ่มต้น', abDel: 'ลบ', abDelQ: 'ลบที่อยู่นี้?', abDelDone: 'ลบแล้ว', abDefDone: 'ตั้งเป็นค่าเริ่มต้นแล้ว',
     abAdd: (n, m) => `เพิ่มที่อยู่ (${n}/${m})`, abFull: m => `บันทึกได้สูงสุด ${m} ที่อยู่`, abTip: 'บันทึกได้หลายที่อยู่ แล้วเลือกได้ว่าแต่ละรอบบินจะส่งไปที่ไหน (กดที่ 📍 ในการ์ดรอบบิน) ถ้าไม่เลือก จะส่งที่อยู่ค่าเริ่มต้น',
     abHome: 'บ้าน', abWork: 'ที่ทำงาน', abFamily: 'บ้านพ่อแม่', abEditT: 'แก้ไขที่อยู่', abNewT: 'เพิ่มที่อยู่ใหม่', abLabel: 'ตั้งชื่อที่อยู่นี้', abLabelPh: 'เช่น บ้าน / ที่ทำงาน',
+    scT: 'รูปตาชั่ง', scN: n => `${n} รูป`, scView: 'ดูรูป ›', scKg: k => `⚖️ น้ำหนักจริง ${k} kg`, scHint: 'รูปจากโกดังไทย · กดรูปเพื่อดูขนาดเต็ม',
     abSendTo: 'รอบนี้ส่งที่', abLocked: 'เริ่มจัดส่งแล้ว เปลี่ยนไม่ได้', abPickT: r => `เลือกที่อยู่ส่ง · ${r}`, abPicked: n => `รอบนี้จะส่งไปที่ ${n}`,
     pendTitle: 'ส่งคำขอแล้ว', pendSub: 'แอดมินกำลังตรวจสอบบัญชีของคุณ เมื่อยืนยันแล้วเปิดหน้านี้อีกครั้งจะเห็นพัสดุทั้งหมด',
     ERR: {
@@ -371,6 +379,7 @@ const T = {
     abDefault: 'Default', abNoLabel: 'Address', abMakeDef: 'Set as default', abDel: 'Delete', abDelQ: 'Delete this address?', abDelDone: 'Deleted', abDefDone: 'Default address updated',
     abAdd: (n, m) => `Add address (${n}/${m})`, abFull: m => `You can save up to ${m} addresses`, abTip: 'Save several addresses, then choose where each flight round goes (tap 📍 on the round card). If you don\'t choose, we use your default address.',
     abHome: 'Home', abWork: 'Work', abFamily: 'Family', abEditT: 'Edit address', abNewT: 'New address', abLabel: 'Name this address', abLabelPh: 'e.g. Home / Office',
+    scT: 'Scale photos', scN: n => `${n} photo${n > 1 ? 's' : ''}`, scView: 'View ›', scKg: k => `⚖️ Actual weight ${k} kg`, scHint: 'Taken at our Thailand warehouse · tap to enlarge',
     abSendTo: 'Ship this round to', abLocked: 'Already shipping — can\'t change', abPickT: r => `Choose address · ${r}`, abPicked: n => `This round will ship to ${n}`,
     pendTitle: 'Request sent', pendSub: 'Our admin is verifying your account. Reopen this page once confirmed',
     ERR: {
@@ -672,6 +681,26 @@ function openAddress(editing = false) {
   if (editing === true) showForm(abById(book.def) || null); else showList();
 }
 function bindAddress() {}
+// การ์ดรอบบิน: แถบรูปตาชั่ง (ขึ้นเฉพาะรอบที่ทีมโกดังถ่ายแล้ว · รูปย่อโหลดตรงจาก Google ตอนเปิดดูเท่านั้น)
+let scale = {};
+function scaleOf(round) { const s = scale[normRound(round)]; return s && s.ids && s.ids.length ? s : null; }
+function scaleRow(round) {
+  const s = scaleOf(round); if (!s) return '';
+  return `<button class="sph" data-scale="${esc(round || '')}"><span>📷</span><b>${t('scT')} · ${t('scN', s.ids.length)}${s.kg ? `<br><small>${t('scKg', Number(s.kg).toFixed(2))}</small>` : ''}</b><em>${t('scView')}</em></button>`;
+}
+const gimg = (id, w) => `https://lh3.googleusercontent.com/d/${id}=w${w}`;
+function openScale(round) {
+  const s = scaleOf(round); if (!s) return;
+  const { el, close } = sheet(`<div class="sheet-h"><b>📷 ${t('scT')} · ${esc(roundText(round))}</b><button class="x" data-x>✕</button></div>
+    <div class="sheet-body plain">${s.kg ? `<div style="margin-bottom:6px;font-weight:600">${t('scKg', Number(s.kg).toFixed(2))}</div>` : ''}<div style="color:var(--muted);font-size:13px;margin-bottom:10px">${t('scHint')}</div>
+      <div class="sgrid">${s.ids.map(id => `<button data-full="${esc(id)}"><img loading="lazy" decoding="async" alt="" src="${gimg(id, 480)}" onload="this.classList.add('ok')" onerror="if(!this.dataset.f){this.dataset.f=1;this.src='https://drive.google.com/thumbnail?id=${esc(id)}&sz=w480'}"></button>`).join('')}</div></div>`);
+  el.querySelector('[data-x]').onclick = close;
+  el.querySelectorAll('[data-full]').forEach(b => b.onclick = () => {
+    const lb = document.createElement('div'); lb.className = 'lbx';
+    lb.innerHTML = `<img alt="" src="${gimg(b.dataset.full, 1600)}"><button class="x">✕</button>`;
+    lb.onclick = () => lb.remove(); document.body.appendChild(lb);
+  });
+}
 // การ์ดรอบบิน: เลือกว่ารอบนี้ส่งไปที่ไหน
 function pickRow(round, items) {
   if (!book.list.length || items.every(p => isDone(p.status))) return '';   // ส่งครบแล้ว ไม่ต้องแสดง
@@ -850,7 +879,7 @@ function viewLinked() {
           ${isUnpaid(g.round) ? `<span class="chip unpaid">${t('payChip')}</span>` : `<span class="chip ${due ? 'wait' : 'ok'}">${due ? t('rDue', due) : t('rAllDone')}</span>`}
           <span class="chev">›</span>
         </button>
-        ${pickRow(g.round, g.items)}
+        ${pickRow(g.round, g.items)}${scaleRow(g.round)}
         <div class="rbody" ${open ? '' : 'hidden'}>${g.items.map(p => parcelCard(p, !due)).join('')}</div>
       </div>`;
   });
@@ -866,6 +895,7 @@ function bindLinked() {
     open ? openRounds.add(h.dataset.round) : openRounds.delete(h.dataset.round);
   });
   app.querySelectorAll('[data-pick]').forEach(b => b.onclick = () => openPick(b.dataset.pick));
+  app.querySelectorAll('[data-scale]').forEach(b => b.onclick = () => openScale(b.dataset.scale));
   app.querySelectorAll('[data-f]').forEach(s => s.onclick = () => { filter = s.dataset.f; render(); });
   const qi = document.getElementById('q');
   qi.oninput = () => {
@@ -1027,7 +1057,7 @@ function applyMe(m) {
       applyLinks();
       document.getElementById('whCode').textContent = WAREHOUSE.code;
     }
-    if (view === 'linked') { parcels = me.parcels; address = me.address || ''; addrObj = me.addr || null; unpaid = me.unpaid || []; book = me.book || { def: '', max: 3, list: [] }; picks = me.picks || {}; }
+    if (view === 'linked') { parcels = me.parcels; address = me.address || ''; addrObj = me.addr || null; unpaid = me.unpaid || []; book = me.book || { def: '', max: 3, list: [] }; picks = me.picks || {}; scale = me.scale || {}; }
 }
 async function load(background) {
   try {
