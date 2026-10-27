@@ -157,6 +157,19 @@
   .ab-opt .addr{padding-left:30px;font-size:13.5px}
   .rpick{display:flex;align-items:center;gap:8px;width:calc(100% - 28px);margin:0 14px 12px;padding:9px 12px;border:1px dashed var(--gold);border-radius:12px;background:var(--goldbg);font:inherit;font-size:13.5px;color:var(--ink);text-align:left}
   .rpick span{color:var(--muted)} .rpick b{flex:1;color:var(--golddeep)} .rpick em{font-style:normal;color:var(--golddeep)}
+  .dsh{margin:-4px 14px 12px;border:1px solid var(--line);border-radius:14px;background:var(--card);overflow:hidden}
+  .dsh-h{display:flex;align-items:center;gap:8px;padding:10px 12px;font-size:13.5px}
+  .dsh-h b{flex:1;font-weight:700}
+  .dsh-h small{color:var(--muted);font-size:12px;font-weight:500;white-space:nowrap}
+  .dsh.ok .dsh-h{background:var(--okbg)} .dsh.ok .dsh-h b{color:var(--ok)}
+  .dsh.wait .dsh-h{background:var(--goldbg)} .dsh.wait .dsh-h b{color:var(--golddeep)}
+  .dsh.lala .dsh-h{background:#e8f0fe} .dsh.lala .dsh-h b{color:#1f4fb5}
+  .dsh-r{display:flex;align-items:center;gap:8px;padding:10px 12px;border-top:1px solid var(--line)}
+  .dsh-r .n{flex:1;min-width:0;font-size:14px}
+  .dsh-r .n i{font-style:normal;font-family:'IBM Plex Mono',monospace;font-weight:600;overflow-wrap:anywhere}
+  .dsh-r .n small{display:block;font-weight:500;font-size:11.5px;color:var(--muted)}
+  .dsh-r a{text-decoration:none;font-size:12.5px;font-weight:700;color:#fff;background:var(--black);padding:7px 11px;border-radius:9px;white-space:nowrap}
+  .dsh-note{padding:8px 12px 11px;font-size:12.5px;color:var(--muted);border-top:1px solid var(--line)}
   .sph{display:flex;align-items:center;gap:8px;width:calc(100% - 28px);margin:-4px 14px 12px;padding:8px 12px;border:1px solid var(--line);border-radius:12px;background:var(--card);font:inherit;font-size:13.5px;color:var(--ink);text-align:left}
   .sph b{flex:1;font-weight:600} .sph small{color:var(--muted);font-size:12px} .sph em{font-style:normal;color:var(--golddeep);font-weight:600}
   .sgrid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
@@ -318,6 +331,7 @@ const T = {
     abDefault: 'ค่าเริ่มต้น', abNoLabel: 'ที่อยู่', abMakeDef: 'ตั้งเป็นค่าเริ่มต้น', abDel: 'ลบ', abDelQ: 'ลบที่อยู่นี้?', abDelDone: 'ลบแล้ว', abDefDone: 'ตั้งเป็นค่าเริ่มต้นแล้ว',
     abAdd: (n, m) => `เพิ่มที่อยู่ (${n}/${m})`, abFull: m => `บันทึกได้สูงสุด ${m} ที่อยู่`, abTip: 'บันทึกได้หลายที่อยู่ แล้วเลือกได้ว่าแต่ละรอบบินจะส่งไปที่ไหน (กดที่ 📍 ในการ์ดรอบบิน) ถ้าไม่เลือก จะส่งที่อยู่ค่าเริ่มต้น',
     abHome: 'บ้าน', abWork: 'ที่ทำงาน', abFamily: 'บ้านพ่อแม่', abEditT: 'แก้ไขที่อยู่', abNewT: 'เพิ่มที่อยู่ใหม่', abLabel: 'ตั้งชื่อที่อยู่นี้', abLabelPh: 'เช่น บ้าน / ที่ทำงาน',
+    shT: 'ส่งออกจากโกดังไทยแล้ว', shBoxes: n => ` · ${n} กล่อง`, shTrack: 'ติดตาม ›', shPost: 'ไปรษณีย์ไทย', shKerry: 'Kerry Express', shBox: (i, n) => ` · กล่อง ${i}/${n}`, shSoon: 'เลขติดตามจะขึ้นที่นี่เร็วๆ นี้', shLalaT: 'ส่ง Lalamove แล้ว', shLalaN: 'Lalamove ไม่มีเลขติดตาม · ไรเดอร์จะติดต่อตามเบอร์ในที่อยู่จัดส่ง', shWaitT: 'ถึงโกดังไทยแล้ว · รอจัดส่ง', shWaitN: 'เลขติดตามจะขึ้นที่นี่อัตโนมัติเมื่อส่งออกจากโกดังไทย',
     scT: 'รูปตาชั่ง', scN: n => `${n} รูป`, scView: 'ดูรูป ›', scKg: k => `⚖️ น้ำหนักจริง ${k} kg`, scHint: 'รูปจากโกดังไทย · กดรูปเพื่อดูขนาดเต็ม',
     abSendTo: 'รอบนี้ส่งที่', abLocked: 'เริ่มจัดส่งแล้ว เปลี่ยนไม่ได้', abPickT: r => `เลือกที่อยู่ส่ง · ${r}`, abPicked: n => `รอบนี้จะส่งไปที่ ${n}`,
     pendTitle: 'ส่งคำขอแล้ว', pendSub: 'แอดมินกำลังตรวจสอบบัญชีของคุณ เมื่อยืนยันแล้วเปิดหน้านี้อีกครั้งจะเห็นพัสดุทั้งหมด',
@@ -379,6 +393,7 @@ const T = {
     abDefault: 'Default', abNoLabel: 'Address', abMakeDef: 'Set as default', abDel: 'Delete', abDelQ: 'Delete this address?', abDelDone: 'Deleted', abDefDone: 'Default address updated',
     abAdd: (n, m) => `Add address (${n}/${m})`, abFull: m => `You can save up to ${m} addresses`, abTip: 'Save several addresses, then choose where each flight round goes (tap 📍 on the round card). If you don\'t choose, we use your default address.',
     abHome: 'Home', abWork: 'Work', abFamily: 'Family', abEditT: 'Edit address', abNewT: 'New address', abLabel: 'Name this address', abLabelPh: 'e.g. Home / Office',
+    shT: 'Shipped from our Thailand warehouse', shBoxes: n => ` · ${n} boxes`, shTrack: 'Track ›', shPost: 'Thailand Post', shKerry: 'Kerry Express', shBox: (i, n) => ` · box ${i}/${n}`, shSoon: 'Your tracking number will appear here soon', shLalaT: 'Sent via Lalamove', shLalaN: 'Lalamove has no tracking number · the rider will call the phone number in your address', shWaitT: 'At our Thailand warehouse · preparing to ship', shWaitN: 'Your tracking number will appear here once it ships',
     scT: 'Scale photos', scN: n => `${n} photo${n > 1 ? 's' : ''}`, scView: 'View ›', scKg: k => `⚖️ Actual weight ${k} kg`, scHint: 'Taken at our Thailand warehouse · tap to enlarge',
     abSendTo: 'Ship this round to', abLocked: 'Already shipping — can\'t change', abPickT: r => `Choose address · ${r}`, abPicked: n => `This round will ship to ${n}`,
     pendTitle: 'Request sent', pendSub: 'Our admin is verifying your account. Reopen this page once confirmed',
@@ -682,8 +697,32 @@ function openAddress(editing = false) {
 }
 function bindAddress() {}
 // การ์ดรอบบิน: แถบรูปตาชั่ง (ขึ้นเฉพาะรอบที่ทีมโกดังถ่ายแล้ว · รูปย่อโหลดตรงจาก Google ตอนเปิดดูเท่านั้น)
-let scale = {};
+let scale = {}, ship = {};
 function scaleOf(round) { const s = scale[normRound(round)]; return s && s.ids && s.ids.length ? s : null; }
+// 📮 จัดส่งในไทย: เลขแทรกกิ้ง / Lalamove / รอจัดส่ง (ข้อมูลจากฝ่ายจัดส่ง · เลขที่ระบบเดาต้องให้แอดมินยืนยันก่อนถึงขึ้นตรงนี้)
+function shipLink(n) {
+  const q = String(n).replace(/\s+/g, '').toUpperCase();
+  if (/^[A-Z]{2}\d{9}TH$/.test(q)) return { url: 'https://track.thailandpost.co.th/?trackNumber=' + q, by: t('shPost') };
+  if (/^(KEX|KRX|KBUDS|LASW)/.test(q)) return { url: 'https://th.kerryexpress.com/th/track/?track=' + q, by: t('shKerry') };
+  return { url: '', by: '' };
+}
+function shipRow(round, items) {
+  const s = ship[normRound(round)], day = s && s.d ? ' ' + fmt(Date.parse(s.d + 'T12:00:00'), { day: 'numeric', month: 'short' }) : '';
+  if (s && s.trk && s.trk.length) {
+    const n = s.trk.length;
+    return `<div class="dsh ok"><div class="dsh-h">📮<b>${t('shT')}${n > 1 ? t('shBoxes', n) : ''}</b><small>${esc(day)}</small></div>${s.trk.map((x, i) => {
+      const L = shipLink(x);
+      return `<div class="dsh-r"><div class="n"><i>${esc(x)}</i>${L.by || n > 1 ? `<small>${esc(L.by)}${n > 1 ? t('shBox', i + 1, n) : ''}</small>` : ''}</div><button class="copy" data-copy="${esc(x)}" aria-label="copy">${I.copy}</button>${L.url ? `<a href="${L.url}" target="_blank" rel="noopener">${t('shTrack')}</a>` : ''}</div>`;
+    }).join('')}</div>`;
+  }
+  if (s && s.lala && s.sent) return `<div class="dsh lala"><div class="dsh-h">🛵<b>${t('shLalaT')}</b><small>${esc(day)}</small></div><div class="dsh-note">${t('shLalaN')}</div></div>`;
+  if (s && s.sent) return `<div class="dsh ok"><div class="dsh-h">📮<b>${t('shT')}</b><small>${esc(day)}</small></div><div class="dsh-note">${t('shSoon')}</div></div>`;
+  // ถึงไทยครบทุกชิ้น ยังไม่ส่ง (เฉพาะรอบล่าสุด ~45 วัน · ไม่เดาให้รอบเก่า)
+  const recent = Math.max(...items.map(p => p.receivedTs || 0)) > Date.now() - 45 * 864e5;
+  if (recent && !isUnpaid(round) && items.length && items.every(p => /ถึง/.test(p.status || '') && !/สำเร็จ|ส่งแล้ว/.test(p.status || '')))
+    return `<div class="dsh wait"><div class="dsh-h">📦<b>${t('shWaitT')}</b></div><div class="dsh-note">${t('shWaitN')}</div></div>`;
+  return '';
+}
 function scaleRow(round) {
   const s = scaleOf(round); if (!s) return '';
   return `<button class="sph" data-scale="${esc(round || '')}"><span>📷</span><b>${t('scT')} · ${t('scN', s.ids.length)}${s.kg ? `<br><small>${t('scKg', Number(s.kg).toFixed(2))}</small>` : ''}</b><em>${t('scView')}</em></button>`;
@@ -879,7 +918,7 @@ function viewLinked() {
           ${isUnpaid(g.round) ? `<span class="chip unpaid">${t('payChip')}</span>` : `<span class="chip ${due ? 'wait' : 'ok'}">${due ? t('rDue', due) : t('rAllDone')}</span>`}
           <span class="chev">›</span>
         </button>
-        ${pickRow(g.round, g.items)}${scaleRow(g.round)}
+        ${pickRow(g.round, g.items)}${shipRow(g.round, g.items)}${scaleRow(g.round)}
         <div class="rbody" ${open ? '' : 'hidden'}>${g.items.map(p => parcelCard(p, !due)).join('')}</div>
       </div>`;
   });
@@ -1057,7 +1096,7 @@ function applyMe(m) {
       applyLinks();
       document.getElementById('whCode').textContent = WAREHOUSE.code;
     }
-    if (view === 'linked') { parcels = me.parcels; address = me.address || ''; addrObj = me.addr || null; unpaid = me.unpaid || []; book = me.book || { def: '', max: 3, list: [] }; picks = me.picks || {}; scale = me.scale || {}; }
+    if (view === 'linked') { parcels = me.parcels; address = me.address || ''; addrObj = me.addr || null; unpaid = me.unpaid || []; book = me.book || { def: '', max: 3, list: [] }; picks = me.picks || {}; scale = me.scale || {}; ship = me.ship || {}; }
 }
 async function load(background) {
   try {
