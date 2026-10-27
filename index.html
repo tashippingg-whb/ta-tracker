@@ -199,14 +199,13 @@
   .pay-info{white-space:pre-line;margin-top:10px;padding:10px 12px;border-radius:10px;background:#fff;border:1px solid #f3d6d0;font-size:13.5px;position:relative;padding-right:46px}
   .pay-info .copy{position:absolute;top:8px;right:8px}
   .chip.unpaid{background:#fdecea;color:#8a2d1f}
-  .chip.bad{background:#fdecea;color:#8a2d1f}
-  .fk-i{display:flex;gap:10px;align-items:flex-start;padding:11px 0 0;margin-top:11px;border-top:1px dashed rgba(0,0,0,.1)}
-  .fk-i .tx{flex:1;min-width:0}
-  .fk-i .tx b{display:block;font-size:14px;font-weight:600;line-height:1.35;word-break:break-word}
-  .fk-i .tx small{display:block;color:#6d685c;font-size:12.5px;margin-top:2px}
-  .fk-i:first-child{border-top:0;margin-top:0}
-  .fk-trk{display:flex;align-items:center;flex-wrap:wrap;gap:6px;margin-top:5px;font-size:12.5px;color:#6d685c}
-  .fk-trk code{font:600 12.5px ui-monospace,Menlo,monospace;color:#17150f;word-break:break-all}
+  .fk-c{padding:14px 16px}
+  .fk-h{display:flex;align-items:center;gap:10px;margin-bottom:4px}
+  .fk-h span{font-size:20px}
+  .fk-h b{font-size:15px;font-weight:700}
+  .fk-h small{display:block;font-size:12.5px;font-weight:400;color:#6d685c}
+  .fk-trk{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:8px 0;border-top:1px dashed rgba(0,0,0,.1)}
+  .fk-trk code{font:600 14px ui-monospace,Menlo,monospace;color:#17150f;word-break:break-all}
 
   /* ---------- Inputs ---------- */
   label{display:block;font-size:13px;font-weight:600;color:#3d3a34;margin:14px 0 6px}
@@ -333,7 +332,7 @@ const T = {
     addrOld: 'กรุณาอัปเดตที่อยู่ให้ครบทุกช่อง เพื่อให้จัดส่งได้ถูกต้อง',
     fShip: 'วิธีจัดส่งในไทย', fNote: 'หมายเหตุถึงแอดมิน (ถ้ามี)', fNotePh: 'เช่น โทรก่อนส่ง / ฝากไว้กับ รปภ. / ส่งหลัง 5 โมงเย็น',
     shipL: 'วิธีจัดส่ง', noteL: 'หมายเหตุ',
-    payTitle: 'มียอดค้างชำระ', paySub: 'พัสดุในรอบนี้จะจัดส่งหลังได้รับชำระเงิน', payChip: 'รอชำระเงิน', fkT: 'สินค้าฝากกดสั่งซื้อ', fkSub: n => `${n} ชิ้น · อัปเดตจากร้านค้า`, fkSt: { 'สั่งแล้ว': 'สั่งซื้อแล้ว', 'กำลังแพ็ค': 'ร้านกำลังแพ็ค', 'ร้านส่งแล้ว': 'ร้านส่งของแล้ว', 'ถึงโกดัง US': 'ถึงโกดัง US แล้ว', 'ยกเลิก': 'ยกเลิก' }, fkTrk: 'เลขพัสดุในอเมริกา', payInfo: 'ช่องทางชำระเงิน', baht: n => `฿${n.toLocaleString('th-TH')}`,
+    payTitle: 'มียอดค้างชำระ', paySub: 'พัสดุในรอบนี้จะจัดส่งหลังได้รับชำระเงิน', payChip: 'รอชำระเงิน', fkT: 'เลขพัสดุสินค้าฝากกด', fkSub: n => `${n} เลข · จากร้านค้าในอเมริกาถึงโกดัง US`, payInfo: 'ช่องทางชำระเงิน', baht: n => `฿${n.toLocaleString('th-TH')}`,
     policy: 'ข้อกำหนดและเงื่อนไขการให้บริการ', agreeFull: v => `ข้าพเจ้าได้อ่านและเข้าใจข้อกำหนดและเงื่อนไขการให้บริการ ฉบับที่ ${v} และประกาศอัตราค่าบริการและแผนคุ้มครองแล้ว และยอมรับข้อกำหนดดังกล่าว รวมถึงข้อจำกัดความรับผิด เงื่อนไขประกัน และการเก็บใช้ข้อมูลส่วนบุคคล`, qaRates: 'ค่าบริการ', regQ: 'ลูกค้าใหม่ ยังไม่มีรหัสสมาชิก?', regLink: 'กรอกแบบฟอร์มลงทะเบียน', ratesTitle: 'อัตราค่าบริการและแผนคุ้มครอง', agreePre: 'ฉันได้อ่านและยอมรับ', agreePost: 'รวมถึงการเก็บเบอร์โทรและที่อยู่เพื่อใช้จัดส่ง', needAgree: 'กรุณาอ่านและยอมรับข้อกำหนดและเงื่อนไขการให้บริการก่อนผูกบัญชี',
     polRead: 'อ่านข้อกำหนดและเงื่อนไขการให้บริการ', polReadAgain: 'อ่านข้อกำหนดอีกครั้ง', polHint: 'กรุณาอ่านข้อกำหนดให้จบก่อน จึงจะกดยอมรับได้', polAccept: 'อ่านแล้ว ยอมรับ', polClose: 'ปิด', polScroll: 'เลื่อนอ่านให้จบเพื่อกดยอมรับ', polOpenFull: 'เปิดอ่านฉบับเต็ม', retry: 'ลองอีกครั้ง',
     abDefault: 'ค่าเริ่มต้น', abNoLabel: 'ที่อยู่', abMakeDef: 'ตั้งเป็นค่าเริ่มต้น', abDel: 'ลบ', abDelQ: 'ลบที่อยู่นี้?', abDelDone: 'ลบแล้ว', abDefDone: 'ตั้งเป็นค่าเริ่มต้นแล้ว',
@@ -395,7 +394,7 @@ const T = {
     addrOld: 'Please update your address with every field so we can deliver correctly',
     fShip: 'Delivery method in Thailand', fNote: 'Note to admin (optional)', fNotePh: 'e.g. Call before delivery / Leave with security / After 5 pm',
     shipL: 'Delivery', noteL: 'Note',
-    payTitle: 'Payment due', paySub: 'Parcels in these rounds will be delivered once payment is received', payChip: 'Payment due', fkT: 'Buy-for-you orders', fkSub: n => `${n} item${n > 1 ? 's' : ''} · updates from the seller`, fkSt: { 'สั่งแล้ว': 'Ordered', 'กำลังแพ็ค': 'Being packed', 'ร้านส่งแล้ว': 'Shipped by seller', 'ถึงโกดัง US': 'At US warehouse', 'ยกเลิก': 'Cancelled' }, fkTrk: 'US tracking', payInfo: 'How to pay', baht: n => `฿${n.toLocaleString('en-US')}`,
+    payTitle: 'Payment due', paySub: 'Parcels in these rounds will be delivered once payment is received', payChip: 'Payment due', fkT: 'Buy-for-you tracking', fkSub: n => `${n} number${n > 1 ? 's' : ''} · seller to our US warehouse`, payInfo: 'How to pay', baht: n => `฿${n.toLocaleString('en-US')}`,
     policy: 'Terms & Conditions', agreeFull: v => `I have read and understood the Terms & Conditions (version ${v}) and the Service Rates & Protection Plans, and I accept them, including the limitations of liability, insurance conditions and use of my personal data`, qaRates: 'Rates', regQ: 'New customer without a member code?', regLink: 'Fill in the registration form', ratesTitle: 'Service rates & protection plans', agreePre: 'I have read and accept the', agreePost: 'including use of my phone and address for delivery', needAgree: 'Please read and accept the Terms & Conditions before linking',
     polRead: 'Read the Terms & Conditions', polReadAgain: 'Read the terms again', polHint: 'Please read the terms to the end before accepting', polAccept: 'I have read and accept', polClose: 'Close', polScroll: 'Scroll to the end to accept', polOpenFull: 'Open full version', retry: 'Try again',
     abDefault: 'Default', abNoLabel: 'Address', abMakeDef: 'Set as default', abDel: 'Delete', abDelQ: 'Delete this address?', abDelDone: 'Deleted', abDefDone: 'Default address updated',
@@ -705,7 +704,7 @@ function openAddress(editing = false) {
 }
 function bindAddress() {}
 // การ์ดรอบบิน: แถบรูปตาชั่ง (ขึ้นเฉพาะรอบที่ทีมโกดังถ่ายแล้ว · รูปย่อโหลดตรงจาก Google ตอนเปิดดูเท่านั้น)
-let scale = {}, ship = {}, fk = [], fkOpen = false;
+let scale = {}, ship = {}, fk = [];
 function scaleOf(round) { const s = scale[normRound(round)]; return s && s.ids && s.ids.length ? s : null; }
 // 📮 จัดส่งในไทย: เลขแทรกกิ้ง / Lalamove / รอจัดส่ง (ข้อมูลจากฝ่ายจัดส่ง · เลขที่ระบบเดาต้องให้แอดมินยืนยันก่อนถึงขึ้นตรงนี้)
 function shipLink(n) {
@@ -885,23 +884,14 @@ function payCard() {
   </div>`;
 }
 
-// 🛒 ของฝากกด (แอดมินติ๊กโชว์แล้วเท่านั้น)
+// 🛒 ของฝากกด: แสดงแค่เลขแทรกกิ้ง (เฉพาะชิ้นที่แอดมินติ๊กโชว์ และใส่เลขแล้ว)
 function fkCard() {
-  if (!fk.length) return '';
-  const live = fk.filter(x => x.st !== 'ยกเลิก' && x.st !== 'ถึงโกดัง US').length;
-  return `<div class="card rgroup">
-    <button class="rhead" id="fkHead" aria-expanded="${fkOpen}">
-      <div class="rico">🛒</div>
-      <div class="rt"><b>${t('fkT')}</b><small>${t('fkSub', fk.length)}</small></div>
-      <span class="chip ${live ? 'wait' : 'ok'}">${live ? t('rDue', live) : t('rAllDone')}</span>
-      <span class="chev">›</span>
-    </button>
-    <div class="rbody" id="fkBody" ${fkOpen ? '' : 'hidden'}>${fk.map(x => {
-      const c = x.st === 'ถึงโกดัง US' ? 'ok' : x.st === 'ยกเลิก' ? 'bad' : 'wait', p = parseFloat(x.p);
-      return `<div class="fk-i"><div class="tx"><b>${esc(x.t)}</b><small>${esc(x.store)}${p ? ' · $' + p.toFixed(2) : ''}${x.up ? ' · ' + esc(x.up.split(' ')[0]) : ''}</small>
-        ${x.trk ? x.trk.split(/\s+/).map(k => `<div class="fk-trk">${t('fkTrk')} <code>${esc(k)}</code><button class="copy" data-copy="${esc(k)}">${I.copy}</button></div>`).join('') : ''}</div>
-        <span class="chip ${c}">${esc((t('fkSt') || {})[x.st] || x.st)}</span></div>`;
-    }).join('')}</div>
+  const trk = [];
+  fk.forEach(x => String(x.trk || '').split(/\s+/).filter(Boolean).forEach(k => { if (trk.indexOf(k) < 0) trk.push(k); }));
+  if (!trk.length) return '';
+  return `<div class="card fk-c">
+    <div class="fk-h"><span>🛒</span><b>${t('fkT')}<small>${t('fkSub', trk.length)}</small></b></div>
+    ${trk.map(k => `<div class="fk-trk"><code>${esc(k)}</code><button class="copy" data-copy="${esc(k)}">${I.copy}</button></div>`).join('')}
   </div>`;
 }
 
@@ -956,8 +946,6 @@ function viewLinked() {
 
 function bindLinked() {
   bindAddress();
-  const fh = document.getElementById('fkHead');
-  if (fh) fh.onclick = () => { fkOpen = !fkOpen; fh.setAttribute('aria-expanded', fkOpen); document.getElementById('fkBody').hidden = !fkOpen; };
   app.querySelectorAll('[data-round]').forEach(h => h.onclick = () => {
     const open = h.getAttribute('aria-expanded') !== 'true';
     h.setAttribute('aria-expanded', open);
