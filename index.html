@@ -568,7 +568,7 @@ function quickBar(withAddress) {
   const b = [];
   if (LINKS.schedule) b.push(`<button class="qa" data-url="${esc(LINKS.schedule)}"><span class="qi">${I.cal}</span><span>${t('qaSched')}</span></button>`);
   if (LINKS.thaiTracking) b.push(`<button class="qa" data-url="${esc(LINKS.thaiTracking)}"><span class="qi">${I_TRUCK}</span><span>${t('qaTrack')}</span></button>`);
-  b.push(`<button class="qa" data-qa="wh"><span class="qi qcode">${esc(WAREHOUSE.code)}</span><span>${t('qaWh')}</span></button>`);
+  if (withAddress) b.push(`<button class="qa" data-qa="wh"><span class="qi qcode">${esc(WAREHOUSE.code)}</span><span>${t('qaWh')}</span></button>`);
   if (withAddress) b.push(`<button class="qa" data-qa="addr"><span class="qi">${I.pin}</span><span>${t('qaAddr')}</span></button>`);
   if (LINKS.prohibited) b.push(`<button class="qa" data-qa="ban"><span class="qi qban">${I_BAN}</span><span>${t('qaBan')}</span></button>`);
   if (LINKS.rates) b.push(`<button class="qa" data-qa="rates"><span class="qi">${I_COIN}</span><span>${t('qaRates')}</span></button>`);
