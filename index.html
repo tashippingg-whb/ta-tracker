@@ -200,6 +200,8 @@
   .pay-info .copy{position:absolute;top:8px;right:8px}
   .chip.unpaid{background:#fdecea;color:#8a2d1f}
   .fk-c{padding:14px 16px}
+  .pre-c textarea{width:100%;min-height:64px;margin-top:8px;border:1px solid var(--line,#e5e0d5);border-radius:12px;padding:10px 12px;font:inherit;font-size:15px;resize:vertical;background:#fffdf8}
+  .pre-c .btn{margin-top:8px}.pre-l{margin-top:10px;display:flex;flex-direction:column;gap:6px}.pre-i{display:flex;align-items:center;gap:8px;font-size:13px}.pre-i code{flex:1;overflow:hidden;text-overflow:ellipsis}
   .fk-h{display:flex;align-items:center;gap:10px;margin-bottom:4px}
   .fk-h span{font-size:20px}
   .fk-h b{font-size:15px;font-weight:700}
@@ -341,6 +343,9 @@ const T = {
     shT: 'ส่งออกจากโกดังไทยแล้ว', shBoxes: n => ` · ${n} กล่อง`, shTrack: 'ติดตาม ›', shPost: 'ไปรษณีย์ไทย', shKerry: 'Kerry Express', shBox: (i, n) => ` · กล่อง ${i}/${n}`, shSoon: 'เลขติดตามจะขึ้นที่นี่เร็วๆ นี้', shLalaT: 'ส่ง Lalamove แล้ว', shLalaN: 'Lalamove ไม่มีเลขติดตาม · ไรเดอร์จะติดต่อตามเบอร์ในที่อยู่จัดส่ง', shWaitT: 'ถึงโกดังไทยแล้ว · รอจัดส่ง', shWaitN: 'เลขติดตามจะขึ้นที่นี่อัตโนมัติเมื่อส่งออกจากโกดังไทย',
     scT: 'รูปตาชั่ง', scN: n => `${n} รูป`, scView: 'ดูรูป ›', scKg: k => `⚖️ น้ำหนักจริง ${k} kg`, scHint: 'รูปจากโกดังไทย · กดรูปเพื่อดูขนาดเต็ม',
     abSendTo: 'รอบนี้ส่งที่', abLocked: 'เริ่มจัดส่งแล้ว เปลี่ยนไม่ได้', abPickT: r => `เลือกที่อยู่ส่ง · ${r}`, abPicked: n => `รอบนี้จะส่งไปที่ ${n}`,
+    preT: 'แจ้งเลขพัสดุที่สั่งแล้ว', preSub: 'วางเลข Tracking จากร้าน (หลายเลขได้) ไม่ต้องส่งให้แอดมิน · ส่งแอดมินแค่ Invoice', prePh: 'วางเลข Tracking ที่นี่ (1 บรรทัดต่อ 1 เลข)', preBtn: 'บันทึกเลขพัสดุ', preWait: '⏳ รอถึงโกดัง', preChk: '🔎 แอดมินกำลังตรวจสอบ', preListT: n => `รอถึงโกดัง ${n} ชิ้น`, preDone: (a, d) => a ? `บันทึก ${a} เลขแล้ว ✓` + (d ? ` (ซ้ำ ${d})` : '') : 'เลขนี้แจ้งไว้แล้ว',
+    newQ: '🆕 ลูกค้าใหม่ ของยังไม่ถึงโกดัง?', fTrk: 'เลขแทรกกิ้งพัสดุชิ้นแรก', fTrkPh: 'เลขแทรกกิ้งจากร้านที่สั่ง', trkHint: 'ระบบจะเปิดหน้านี้ให้อัตโนมัติเมื่อพัสดุชิ้นนี้ถึงโกดังอเมริกา (ชื่อบนกล่องต้องตรงกับชื่อที่กรอก)',
+    waitTitle: 'ลงทะเบียนแล้ว · รอพัสดุชิ้นแรกถึงโกดัง', waitSub: t => `เมื่อพัสดุ ${t} ถึงโกดังอเมริกา ระบบจะเปิดหน้าติดตามพัสดุให้อัตโนมัติ (ภายใน 1–2 วันทำการหลังของถึง)`,
     pendTitle: 'ส่งคำขอแล้ว', pendSub: 'แอดมินกำลังตรวจสอบบัญชีของคุณ เมื่อยืนยันแล้วเปิดหน้านี้อีกครั้งจะเห็นพัสดุทั้งหมด',
     ERR: {
       ADDR_NAME: 'กรุณากรอกชื่อ-นามสกุลผู้รับ',
@@ -348,7 +353,10 @@ const T = {
       ADDR_LINE1: 'กรุณากรอกบ้านเลขที่ / ถนน',
       ADDR_AREA: 'กรุณากรอกตำบล อำเภอ และจังหวัดให้ครบ',
       ADDR_ZIP: 'รหัสไปรษณีย์ต้องเป็นตัวเลข 5 หลัก',
-      NAME_NOT_FOUND: 'ไม่พบชื่อนี้ในระบบ กรุณากรอกให้ตรงกับชื่อที่ใช้ส่งของ เช่น Justin Pongpol',
+      NAME_NOT_FOUND: 'ไม่พบชื่อนี้ในระบบ กรุณากรอกให้ตรงกับชื่อที่ใช้ส่งของ เช่น Justin Pongpol · ถ้าเป็นลูกค้าใหม่ที่ของยังไม่ถึงโกดัง ใส่เลขแทรกกิ้งพัสดุชิ้นแรกด้านล่าง',
+      BAD_TRACKING: 'เลขแทรกกิ้งไม่ถูกต้อง',
+      NO_TRACKING: 'ไม่พบเลขพัสดุในข้อความ กรุณาตรวจสอบอีกครั้ง',
+      NEED_PREFIX: 'กรุณาใส่รหัสโกดังนำหน้าชื่อ เช่น Justin Pongpol',
       NAME_AMBIGUOUS: 'ชื่อนี้มีมากกว่า 1 รหัส กรุณากรอกพร้อมรหัสโกดัง เช่น Justin Pongpol หรือ UTT Pongpol',
       BAD_PHONE: 'เบอร์โทรไม่ถูกต้อง กรุณากรอกเบอร์ 10 หลัก เช่น 0812345678',
       BAD_ADDRESS: 'กรุณากรอกที่อยู่ให้ครบ (บ้านเลขที่ ถนน ตำบล อำเภอ จังหวัด รหัสไปรษณีย์)',
@@ -403,6 +411,9 @@ const T = {
     shT: 'Shipped from our Thailand warehouse', shBoxes: n => ` · ${n} boxes`, shTrack: 'Track ›', shPost: 'Thailand Post', shKerry: 'Kerry Express', shBox: (i, n) => ` · box ${i}/${n}`, shSoon: 'Your tracking number will appear here soon', shLalaT: 'Sent via Lalamove', shLalaN: 'Lalamove has no tracking number · the rider will call the phone number in your address', shWaitT: 'At our Thailand warehouse · preparing to ship', shWaitN: 'Your tracking number will appear here once it ships',
     scT: 'Scale photos', scN: n => `${n} photo${n > 1 ? 's' : ''}`, scView: 'View ›', scKg: k => `⚖️ Actual weight ${k} kg`, scHint: 'Taken at our Thailand warehouse · tap to enlarge',
     abSendTo: 'Ship this round to', abLocked: 'Already shipping — can\'t change', abPickT: r => `Choose address · ${r}`, abPicked: n => `This round will ship to ${n}`,
+    preT: 'Add tracking numbers', preSub: 'Paste the store tracking numbers here (several OK) — no need to send them to admin · just send the invoice', prePh: 'Paste tracking numbers (one per line)', preBtn: 'Save tracking', preWait: '⏳ Not yet at warehouse', preChk: '🔎 Admin checking', preListT: n => `${n} waiting for the warehouse`, preDone: (a, d) => a ? `Saved ${a} number${a > 1 ? 's' : ''} ✓` + (d ? ` (${d} already added)` : '') : 'Already added',
+    newQ: '🆕 New customer — nothing at the warehouse yet?', fTrk: 'Tracking number of your first parcel', fTrkPh: 'Tracking number from the store', trkHint: 'Your dashboard opens automatically once this parcel reaches our US warehouse (the name on the box must match the name above)',
+    waitTitle: 'Registered · waiting for your first parcel', waitSub: t => `Once parcel ${t} reaches our US warehouse, your tracking page opens automatically (within 1–2 business days of arrival)`,
     pendTitle: 'Request sent', pendSub: 'Our admin is verifying your account. Reopen this page once confirmed',
     ERR: {
       ADDR_NAME: 'Please enter the recipient name',
@@ -410,7 +421,10 @@ const T = {
       ADDR_LINE1: 'Please enter house number / street',
       ADDR_AREA: 'Please fill in sub-district, district and province',
       ADDR_ZIP: 'Postcode must be 5 digits',
-      NAME_NOT_FOUND: 'Name not found. Enter it exactly as used for shipping, e.g. Justin Pongpol',
+      NAME_NOT_FOUND: 'Name not found. Enter it exactly as used for shipping, e.g. Justin Pongpol · New customer with nothing at the warehouse yet? Enter your first tracking number below',
+      BAD_TRACKING: 'Invalid tracking number',
+      NO_TRACKING: 'No tracking number found. Please check and try again',
+      NEED_PREFIX: 'Please include your warehouse code before your name, e.g. Justin Pongpol',
       NAME_AMBIGUOUS: 'This name exists under more than one code. Please include your warehouse code, e.g. Justin Pongpol',
       BAD_PHONE: 'Invalid phone number. Use 10 digits, e.g. 0812345678',
       BAD_ADDRESS: 'Please enter your full address',
@@ -704,7 +718,7 @@ function openAddress(editing = false) {
 }
 function bindAddress() {}
 // การ์ดรอบบิน: แถบรูปตาชั่ง (ขึ้นเฉพาะรอบที่ทีมโกดังถ่ายแล้ว · รูปย่อโหลดตรงจาก Google ตอนเปิดดูเท่านั้น)
-let scale = {}, ship = {}, fk = [];
+let scale = {}, ship = {}, fk = [], pre = [];
 function scaleOf(round) { const s = scale[normRound(round)]; return s && s.ids && s.ids.length ? s : null; }
 // 📮 จัดส่งในไทย: เลขแทรกกิ้ง / Lalamove / รอจัดส่ง (ข้อมูลจากฝ่ายจัดส่ง · เลขที่ระบบเดาต้องให้แอดมินยืนยันก่อนถึงขึ้นตรงนี้)
 function shipLink(n) {
@@ -787,6 +801,8 @@ function viewNew() {
       <div class="sec-h" style="margin-top:14px"><div class="ico">${I.user}</div><b>${t('linkTitle')}<small>${t('linkSub')}</small></b></div>
       <label for="nm">${t('fName')}</label>
       <input id="nm" placeholder="${esc(t('fNamePh'))}" value="${esc(form.name)}" autocomplete="off">
+      ${form.needTrk ? `<label for="tk">${t('fTrk')}</label><input id="tk" placeholder="${esc(t('fTrkPh'))}" value="${esc(form.trk || '')}" autocomplete="off" autocapitalize="characters"><p class="muted" style="margin:4px 0 0;font-size:12.5px">${t('trkHint')}</p>`
+        : `<p class="muted reg" style="margin:6px 0 0"><button type="button" class="inl" id="newC">${t('newQ')}</button></p>`}
       <label for="ph">${t('fPhone')}</label>
       <input id="ph" type="tel" inputmode="numeric" placeholder="0812345678" value="${esc(form.phone)}" autocomplete="tel">
       <div class="ad-h"><b>${t('adSec')}</b><small>${t('adSecSub')}</small></div>
@@ -807,8 +823,10 @@ function viewNew() {
 function bindNew() {
   const nm = document.getElementById('nm'), ph = document.getElementById('ph');
   const ok = document.getElementById('ok');
-  const sync = () => { form.name = nm.value; form.phone = ph.value; form.ad = readAddr(app); form.agree = !!(ok && ok.checked); };
-  [nm, ph, ...app.querySelectorAll('[data-ak]')].forEach(el => el.oninput = sync);
+  const tk = document.getElementById('tk'), nc = document.getElementById('newC');
+  const sync = () => { form.name = nm.value; form.phone = ph.value; form.ad = readAddr(app); form.agree = !!(ok && ok.checked); if (tk) form.trk = tk.value; };
+  [nm, ph, ...(tk ? [tk] : []), ...app.querySelectorAll('[data-ak]')].forEach(el => el.oninput = sync);
+  if (nc) nc.onclick = () => { sync(); form.needTrk = true; render(); const x = document.getElementById('tk'); if (x) x.focus(); };
   // เบอร์ผู้รับ: ใช้เบอร์เดียวกับเบอร์บัญชีถ้ายังไม่ได้กรอก
   ph.onchange = () => { const rp = document.getElementById('n_phone'); if (rp && !rp.value) rp.value = ph.value; sync(); prefill(); };
   nm.onchange = () => { sync(); prefill(); };
@@ -840,10 +858,10 @@ function bindNew() {
     if (hasPolicy() && !form.agree) { form.error = 'AGREE'; return render(); }
     e.target.disabled = true; e.target.textContent = t('checking');
     try {
-      const r = await api('link', { name, phone, address: addr, lineName, agree: hasPolicy() ? form.agree : false });
+      const r = await api('link', { name, phone, address: addr, lineName, agree: hasPolicy() ? form.agree : false, tracking: form.needTrk ? String(form.trk || '').trim() : '' });
       form.error = '';
-      r.state === 'linked' ? load() : (view = 'pending', render());
-    } catch (err) { form.error = err.message; render(); }
+      r.state === 'linked' ? load() : (me = Object.assign({}, me || {}, { state: 'pending', wait: r.wait || '' }), view = 'pending', render());
+    } catch (err) { if (err.message === 'NAME_NOT_FOUND') form.needTrk = true; form.error = err.message; render(); }
   };
 }
 
@@ -851,8 +869,8 @@ function viewPending() {
   return `
     <div class="card fade empty">
       <div class="ico">${I.check}</div>
-      <b style="color:var(--ink)">${t('pendTitle')}</b>
-      <p class="muted">${t('pendSub')}</p>
+      <b style="color:var(--ink)">${me && me.wait ? t('waitTitle') : t('pendTitle')}</b>
+      <p class="muted">${me && me.wait ? t('waitSub', esc(me.wait)) : t('pendSub')}</p>
     </div>
     ${quickBar(false)}`;
 }
@@ -885,6 +903,16 @@ function payCard() {
 }
 
 // 🛒 ของฝากกด: แสดงแค่เลขแทรกกิ้ง (เฉพาะชิ้นที่แอดมินติ๊กโชว์ และใส่เลขแล้ว)
+function preCard() {
+  const have = {}; parcels.forEach(p => { have[String(p.tracking).toUpperCase().replace(/[^0-9A-Z]/g, '')] = 1; });
+  const L = pre.filter(x => !have[x.t]);
+  return `<div class="card fk-c pre-c">
+    <div class="fk-h"><span>📦</span><b>${t('preT')}<small>${t('preSub')}</small></b></div>
+    <textarea id="preIn" placeholder="${esc(t('prePh'))}" autocapitalize="characters" autocomplete="off"></textarea>
+    <button class="btn" id="preGo">${t('preBtn')}</button>
+    ${L.length ? `<div class="pre-l"><small class="muted">${t('preListT', L.length)}</small>${L.map(x => `<div class="pre-i"><code>${esc(x.t)}</code><span class="chip ${x.chk ? 'unpaid' : 'wait'}">${x.chk ? t('preChk') : t('preWait')}</span></div>`).join('')}</div>` : ''}
+  </div>`;
+}
 function fkCard() {
   const trk = [];
   fk.forEach(x => String(x.trk || '').split(/\s+/).filter(Boolean).forEach(k => { if (trk.indexOf(k) < 0) trk.push(k); }));
@@ -912,6 +940,7 @@ function viewLinked() {
       <button class="stat done ${filter === 'done' ? 'on' : ''}" data-f="done"><b>${done}</b><span>${t('done')}</span></button>
     </div>
     ${quickBar(true)}
+    ${preCard()}
     ${fkCard()}
     <div class="search">${I.search}<input id="q" placeholder="${esc(t('search'))}" value="${esc(query)}" inputmode="search"></div>`;
 
@@ -946,6 +975,13 @@ function viewLinked() {
 
 function bindLinked() {
   bindAddress();
+  const pg = document.getElementById('preGo');
+  if (pg) pg.onclick = async () => {
+    const txt = document.getElementById('preIn').value.trim(); if (!txt) return;
+    pg.disabled = true; pg.textContent = t('checking');
+    try { const r = await api('pre', { text: txt, lineName }); pre = r.pre || pre; render(); toast(t('preDone', r.added, r.dup)); }
+    catch (err) { pg.disabled = false; pg.textContent = t('preBtn'); toast(msg(err.message)); }
+  };
   app.querySelectorAll('[data-round]').forEach(h => h.onclick = () => {
     const open = h.getAttribute('aria-expanded') !== 'true';
     h.setAttribute('aria-expanded', open);
@@ -1115,7 +1151,7 @@ function applyMe(m) {
       applyLinks();
       document.getElementById('whCode').textContent = WAREHOUSE.code;
     }
-    if (view === 'linked') { parcels = me.parcels; address = me.address || ''; addrObj = me.addr || null; unpaid = me.unpaid || []; book = me.book || { def: '', max: 3, list: [] }; picks = me.picks || {}; scale = me.scale || {}; ship = me.ship || {}; fk = me.fk || []; }
+    if (view === 'linked') { parcels = me.parcels; address = me.address || ''; addrObj = me.addr || null; unpaid = me.unpaid || []; book = me.book || { def: '', max: 3, list: [] }; picks = me.picks || {}; scale = me.scale || {}; ship = me.ship || {}; fk = me.fk || []; pre = me.pre || []; }
 }
 async function load(background) {
   try {
