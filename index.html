@@ -319,7 +319,7 @@ const T = {
     addrTitle: 'ที่อยู่จัดส่งในไทย', edit: 'แก้ไข', save: 'บันทึกที่อยู่', cancel: 'ยกเลิก', saving: 'กำลังบันทึก…',
     addrEmpty: 'ยังไม่มีที่อยู่ กดแก้ไขเพื่อเพิ่ม', addrSaved: 'บันทึกที่อยู่ใหม่แล้ว แอดมินได้รับแจ้งแล้ว',
     search: 'ค้นหาเลข Tracking', noMatch: 'ไม่พบพัสดุตามที่เลือก', noParcel: 'ยังไม่มีพัสดุในระบบ',
-    pcs: n => `${n} ชิ้น`, rounds: 'รอบบินของคุณ', rAllDone: 'ส่งครบแล้ว', rDue: n => `ระหว่างจัดส่ง ${n}`, received: 'รับเข้าโกดัง', note: 'หมายเหตุ',
+    pcs: n => `${n} ชิ้น`, rounds: 'รอบส่งของคุณ', rAllDone: 'ส่งครบแล้ว', rDue: n => `ระหว่างจัดส่ง ${n}`, received: 'รับเข้าโกดัง', note: 'หมายเหตุ',
     pics: n => `ดูรูปพัสดุ ${n} รูป`, prefilled: 'ดึงที่อยู่เดิมให้แล้ว ตรวจสอบก่อนกดยืนยัน', loadingPics: 'กำลังโหลดรูป…', picsFail: 'โหลดไม่สำเร็จ ลองอีกครั้ง', noPics: 'ยังไม่มีรูป',
     copied: 'คัดลอกแล้ว', noRound: 'ไม่ระบุรอบ',
     linkTitle: 'ผูกบัญชี LINE กับพัสดุของคุณ', linkSub: 'ทำครั้งเดียว ครั้งต่อไปกดเมนูใน LINE ก็เห็นพัสดุทันที',
@@ -554,6 +554,7 @@ const isDone = s => chipClass(s) === 'ok';
 
 /* ---------- Shared cards ---------- */
 
+const I_SHIP = '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 14h18l-2.2 5H5.2z"/><path d="M6 14V9h12v5"/><path d="M10 9V5h4v4"/><path d="M2 21.5c1.5 0 1.5-1 3-1s1.5 1 3 1 1.5-1 3-1 1.5 1 3 1 1.5-1 3-1 1.5 1 3 1"/></svg>';
 const I_TRUCK = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h11v10H3zM14 9h4l3 3v4h-7"/><circle cx="7" cy="17.5" r="1.8"/><circle cx="17" cy="17.5" r="1.8"/></svg>';
 
 function linksCard() {
@@ -961,7 +962,7 @@ function viewLinked() {
     html += `
       <div class="card rgroup">
         <button class="rhead" data-round="${esc(key)}" aria-expanded="${open}">
-          <div class="rico"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M21 16v-2l-8-5V3.5a1.5 1.5 0 0 0-3 0V9l-8 5v2l8-2.5V19l-2 1.5V22l3.5-1 3.5 1v-1.5L13 19v-5.5z"/></svg></div>
+          <div class="rico">${/sea/i.test(g.round || '') ? I_SHIP : `<svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M21 16v-2l-8-5V3.5a1.5 1.5 0 0 0-3 0V9l-8 5v2l8-2.5V19l-2 1.5V22l3.5-1 3.5 1v-1.5L13 19v-5.5z"/></svg>`}</div>
           <div class="rt"><b>${esc(roundText(g.round))}</b><small>${t('pcs', g.items.length)}${latest ? ' · ' + esc(fmt(latest, { day: 'numeric', month: 'short', year: '2-digit' })) : ''}</small></div>
           ${isUnpaid(g.round) ? `<span class="chip unpaid">${t('payChip')}</span>` : `<span class="chip ${due ? 'wait' : 'ok'}">${due ? t('rDue', due) : t('rAllDone')}</span>`}
           <span class="chev">›</span>
