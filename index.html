@@ -201,6 +201,7 @@
   .chip.unpaid{background:#fdecea;color:#8a2d1f}
   .fk-c{padding:14px 16px}
   .pre-c textarea{width:100%;min-height:64px;margin-top:8px;border:1px solid var(--line,#e5e0d5);border-radius:12px;padding:10px 12px;font:inherit;font-size:15px;resize:vertical;background:#fffdf8}
+  .ln-c .ln-in{width:100%;margin-top:8px;border:1px solid var(--line,#e5e0d5);border-radius:12px;padding:12px;font:inherit;font-size:15px;background:#fffdf8;box-sizing:border-box}
   .pre-c .btn{margin-top:8px}.pre-l{margin-top:10px;display:flex;flex-direction:column;gap:6px}.pre-i{display:flex;align-items:center;gap:8px;font-size:13px}.pre-i code{flex:1;overflow:hidden;text-overflow:ellipsis}
   .fk-h{display:flex;align-items:center;gap:10px;margin-bottom:4px}
   .fk-h span{font-size:20px}
@@ -343,6 +344,7 @@ const T = {
     shT: 'ส่งออกจากโกดังไทยแล้ว', shBoxes: n => ` · ${n} กล่อง`, shTrack: 'ติดตาม ›', shPost: 'ไปรษณีย์ไทย', shKerry: 'Kerry Express', shBox: (i, n) => ` · กล่อง ${i}/${n}`, shSoon: 'เลขติดตามจะขึ้นที่นี่เร็วๆ นี้', shLalaT: 'ส่ง Lalamove แล้ว', shLalaN: 'Lalamove ไม่มีเลขติดตาม · ไรเดอร์จะติดต่อตามเบอร์ในที่อยู่จัดส่ง', shWaitT: 'ถึงโกดังไทยแล้ว · รอจัดส่ง', shWaitN: 'เลขติดตามจะขึ้นที่นี่อัตโนมัติเมื่อส่งออกจากโกดังไทย',
     scT: 'รูปตาชั่ง', scN: n => `${n} รูป`, scView: 'ดูรูป ›', scKg: k => `⚖️ น้ำหนักจริง ${k} kg`, scHint: 'รูปจากโกดังไทย · กดรูปเพื่อดูขนาดเต็ม',
     abSendTo: 'รอบนี้ส่งที่', abLocked: 'เริ่มจัดส่งแล้ว เปลี่ยนไม่ได้', abPickT: r => `เลือกที่อยู่ส่ง · ${r}`, abPicked: n => `รอบนี้จะส่งไปที่ ${n}`,
+    lnT: 'มีพัสดุชื่ออื่น? (เช่น ส่งเรือ)', lnSub: 'ใส่เลข Tracking 1 เลขของกล่องที่ใช้ชื่ออื่น ระบบจะรวมให้เห็นในหน้านี้ และใช้ที่อยู่เดียวกัน', lnPh: 'เลข Tracking ของกล่องที่ใช้ชื่ออื่น', lnBtn: 'เพิ่มชื่อนี้เข้าบัญชีของฉัน', lnNames: 'ชื่อในบัญชี', lnOk: n => `✅ เพิ่มชื่อ "${n}" แล้ว`, lnAlready: n => `ชื่อ "${n}" อยู่ในบัญชีของคุณแล้ว`, lnWait: '⏳ กล่องนี้ยังไม่ถึงโกดัง ระบบจะรวมให้เองเมื่อของถึง', lnTaken: '⚠️ ชื่อนี้ผูกกับบัญชีอื่นอยู่ กรุณาติดต่อแอดมิน', lnBad: 'เลข Tracking ไม่ถูกต้อง',
     preT: 'แจ้งเลขพัสดุที่สั่งแล้ว', preSub: 'วางเลข Tracking จากร้าน (หลายเลขได้) ไม่ต้องส่งให้แอดมิน · ส่งแอดมินแค่ Invoice', prePh: 'วางเลข Tracking ที่นี่ (1 บรรทัดต่อ 1 เลข)', preBtn: 'บันทึกเลขพัสดุ', preWait: '⏳ รอถึงโกดัง', preChk: '🔎 แอดมินกำลังตรวจสอบ', preListT: n => `รอถึงโกดัง ${n} ชิ้น`, preDone: (a, d) => a ? `บันทึก ${a} เลขแล้ว ✓` + (d ? ` (ซ้ำ ${d})` : '') : 'เลขนี้แจ้งไว้แล้ว',
     newQ: '🆕 ลูกค้าใหม่ ของยังไม่ถึงโกดัง?', fTrk: 'เลขแทรกกิ้งพัสดุชิ้นแรก', fTrkPh: 'เลขแทรกกิ้งจากร้านที่สั่ง', trkHint: 'ระบบจะเปิดหน้านี้ให้อัตโนมัติเมื่อพัสดุชิ้นนี้ถึงโกดังอเมริกา (ชื่อบนกล่องต้องตรงกับชื่อที่กรอก)',
     waitTitle: 'ลงทะเบียนแล้ว · รอพัสดุชิ้นแรกถึงโกดัง', waitSub: t => `เมื่อพัสดุ ${t} ถึงโกดังอเมริกา ระบบจะเปิดหน้าติดตามพัสดุให้อัตโนมัติ (ภายใน 1–2 วันทำการหลังของถึง)`,
@@ -411,6 +413,7 @@ const T = {
     shT: 'Shipped from our Thailand warehouse', shBoxes: n => ` · ${n} boxes`, shTrack: 'Track ›', shPost: 'Thailand Post', shKerry: 'Kerry Express', shBox: (i, n) => ` · box ${i}/${n}`, shSoon: 'Your tracking number will appear here soon', shLalaT: 'Sent via Lalamove', shLalaN: 'Lalamove has no tracking number · the rider will call the phone number in your address', shWaitT: 'At our Thailand warehouse · preparing to ship', shWaitN: 'Your tracking number will appear here once it ships',
     scT: 'Scale photos', scN: n => `${n} photo${n > 1 ? 's' : ''}`, scView: 'View ›', scKg: k => `⚖️ Actual weight ${k} kg`, scHint: 'Taken at our Thailand warehouse · tap to enlarge',
     abSendTo: 'Ship this round to', abLocked: 'Already shipping — can\'t change', abPickT: r => `Choose address · ${r}`, abPicked: n => `This round will ship to ${n}`,
+    lnT: 'Parcels under another name? (e.g. sea freight)', lnSub: 'Enter 1 tracking number of a box shipped under your other name — we will show it here and use the same address', lnPh: 'Tracking number of a box under your other name', lnBtn: 'Add this name to my account', lnNames: 'Names on this account', lnOk: n => `✅ Added "${n}"`, lnAlready: n => `"${n}" is already on your account`, lnWait: '⏳ This box has not reached the warehouse yet — we will link it automatically when it arrives', lnTaken: '⚠️ This name is linked to another account — please contact admin', lnBad: 'Invalid tracking number',
     preT: 'Add tracking numbers', preSub: 'Paste the store tracking numbers here (several OK) — no need to send them to admin · just send the invoice', prePh: 'Paste tracking numbers (one per line)', preBtn: 'Save tracking', preWait: '⏳ Not yet at warehouse', preChk: '🔎 Admin checking', preListT: n => `${n} waiting for the warehouse`, preDone: (a, d) => a ? `Saved ${a} number${a > 1 ? 's' : ''} ✓` + (d ? ` (${d} already added)` : '') : 'Already added',
     newQ: '🆕 New customer — nothing at the warehouse yet?', fTrk: 'Tracking number of your first parcel', fTrkPh: 'Tracking number from the store', trkHint: 'Your dashboard opens automatically once this parcel reaches our US warehouse (the name on the box must match the name above)',
     waitTitle: 'Registered · waiting for your first parcel', waitSub: t => `Once parcel ${t} reaches our US warehouse, your tracking page opens automatically (within 1–2 business days of arrival)`,
@@ -914,6 +917,16 @@ function preCard() {
     ${L.length ? `<div class="pre-l"><small class="muted">${t('preListT', L.length)}</small>${L.map(x => `<div class="pre-i"><code>${esc(x.t)}</code><span class="chip ${x.chk ? 'unpaid' : 'wait'}">${x.chk ? t('preChk') : t('preWait')}</span></div>`).join('')}</div>` : ''}
   </div>`;
 }
+// 🔗 เพิ่มชื่อรหัสอื่นของฉัน (เช่น ส่งแอร์ชื่อหนึ่ง ส่งเรืออีกชื่อ) · ยืนยันด้วยเลขพัสดุ 1 เลข
+function lnCard() {
+  const ns = (me && me.names) || [];
+  return `<div class="card fk-c pre-c ln-c">
+    <div class="fk-h"><span>🔗</span><b>${t('lnT')}<small>${t('lnSub')}</small></b></div>
+    <input id="lnIn" class="ln-in" placeholder="${esc(t('lnPh'))}" autocapitalize="characters" autocomplete="off">
+    <button class="btn" id="lnGo">${t('lnBtn')}</button>
+    ${ns.length ? `<div class="pre-l"><small class="muted">${t('lnNames')}: ${ns.map(esc).join(' · ')}</small></div>` : ''}
+  </div>`;
+}
 function fkCard() {
   const trk = [];
   fk.forEach(x => String(x.trk || '').split(/\s+/).filter(Boolean).forEach(k => { if (trk.indexOf(k) < 0) trk.push(k); }));
@@ -942,6 +955,7 @@ function viewLinked() {
     </div>
     ${quickBar(true)}
     ${preCard()}
+    ${lnCard()}
     ${fkCard()}
     <div class="search">${I.search}<input id="q" placeholder="${esc(t('search'))}" value="${esc(query)}" inputmode="search"></div>`;
 
@@ -982,6 +996,18 @@ function bindLinked() {
     pg.disabled = true; pg.textContent = t('checking');
     try { const r = await api('pre', { text: txt, lineName }); pre = r.pre || pre; render(); toast(t('preDone', r.added, r.dup)); }
     catch (err) { pg.disabled = false; pg.textContent = t('preBtn'); toast(msg(err.message)); }
+  };
+  const lg = document.getElementById('lnGo');
+  if (lg) lg.onclick = async () => {
+    const trk = document.getElementById('lnIn').value.trim(); if (!trk) return;
+    lg.disabled = true; lg.textContent = t('checking');
+    try {
+      const r = await api('linkname', { tracking: trk, lineName });
+      const m = { linked: t('lnOk', r.name), already: t('lnAlready', r.name), wait: t('lnWait'), taken: t('lnTaken'), bad: t('lnBad') }[r.status] || '';
+      if (r.names && me) me.names = r.names;
+      if (r.status === 'linked') { await load(true); } else render();
+      toast(m);
+    } catch (err) { lg.disabled = false; lg.textContent = t('lnBtn'); toast(msg(err.message)); }
   };
   app.querySelectorAll('[data-round]').forEach(h => h.onclick = () => {
     const open = h.getAttribute('aria-expanded') !== 'true';
